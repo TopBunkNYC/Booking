@@ -9,10 +9,20 @@ app.use(bodyParser.json());
 app.use(express.static(__dirname + '/../client/dist'));
 
 
+app.get('/listing/id:id', (req, res)=>{ 
+	id = req.params.id
+	console.log('getting request', id)
+	database.getData().then((dataObj)=>{
+		res.status(200).send(dataObj);
+		//console.log(dataObj, 'db to router') dataObj is { dates: [ '2018/12/01'...], price: 100, apartmentid: 9873001 }
+	})
+	
+})
+
 
 
 database.getData().then((dataObj)=>{
-	console.log(dataObj, 'db to router')
+	//console.log(dataObj, 'db to router') dataObj is { dates: [ '2018/12/01'...], price: 100, apartmentid: 9873001 }
 })
 // connection.getData('hello');
 
