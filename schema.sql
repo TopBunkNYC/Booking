@@ -11,6 +11,10 @@ CREATE TABLE apartment (
 	id int NOT NULL AUTO_INCREMENT,
 	apartmentid int NOT NULL,
 	price int NOT NULL,
+    max int NOT NULL,
+    minStay int NOT NULL,
+    stars dec(4,2) NOT NULL,
+    numRatings int NOT NULL,
 	PRIMARY KEY (id)
 
 );
@@ -27,11 +31,11 @@ CREATE TABLE dates (
 );
 
 
-INSERT INTO apartment (apartmentid, price)
+INSERT INTO apartment (apartmentid, price, minStay, stars, numRatings, max)
    VALUES
-   ("9873001" ,"100"),
-   ("9873002" ,"80"),
-   ("9873003" ,"120");             
+   ("9873001" ,"40", "4", "4.83", "78", "4"),
+   ("9873002" ,"55", "6", "4.5", "23", "3"),
+   ("9873003" ,"90", "3", "4.95", "125", "5");             
 
 INSERT INTO dates (date, apartment_id)
    VALUES

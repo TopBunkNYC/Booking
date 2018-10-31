@@ -1,24 +1,28 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const database = require('../database/index.js')
-
+const path = require('path')
 var app = express();
 
 app.use(bodyParser.json());
 
-app.use(express.static(__dirname + '/../client/dist'));
+app.use(express.static(path.join(__dirname + '/../client/dist')));
 
-
+//listing?id=9873001   
 app.get('/listing/id:id', (req, res)=>{ 
 	id = req.params.id
 	console.log('getting request', id)
-	database.getData().then((dataObj)=>{
+	database.getData(id).then((dataObj)=>{
 		res.status(200).send(dataObj);
 		//console.log(dataObj, 'db to router') dataObj is { dates: [ '2018/12/01'...], price: 100, apartmentid: 9873001 }
 	})
 	
 })
 
+
+app.get('/*', (req, res)=>{
+	res.sendFile(path.join(__dirname + '/../client/dist/index.html'))
+})
 
 
 database.getData().then((dataObj)=>{
@@ -38,6 +42,13 @@ database.getData().then((dataObj)=>{
 //		req.query.adults
 //})
 
+
+// app.get('/*', (req, res)=>{
+// 	res.sendFile(path.join(__dirname + '/../client/dist'))
+// })
+
 app.listen(4000, ()=>{
     console.log("listening on port 4000")
 })
+
+app.listen(process.env.PORT)
