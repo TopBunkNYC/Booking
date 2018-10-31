@@ -4,11 +4,14 @@ import axios from 'axios';
 import PriceStars from './components/priceStars.jsx';
 import GuestsBar from './components/guests/guestsBar.jsx'
 import { Grid, Row, Col } from 'react-flexbox-grid';
-// import moment from 'moment'; 
+import moment from 'moment'; 
 import 'react-dates/initialize';
 import { DateRangePicker, SingleDatePicker, DayPickerRangeController } from 'react-dates';
 import 'react-dates/lib/css/_datepicker.css';
 import Total from './components/total.jsx';
+
+
+
 
 
 class App extends React.Component {
@@ -24,8 +27,11 @@ class App extends React.Component {
 			price: 0,
 			stars: 0,
 			apartmentid: 0,
-			dates: [],
-			bookedDates: 0
+			startDate: 0,
+			endDate: 0,
+			dates: ["11/01/2018"],
+			BAD_DATES: [moment()]
+		
 		}
 		this.toggleList = this.toggleList.bind(this)
 	}
@@ -41,7 +47,6 @@ class App extends React.Component {
 	}
 
 	increaseGuests(){
-		//event.preventDefault();
 		console.log("add")
 
 		this.setState({
@@ -59,24 +64,38 @@ class App extends React.Component {
 
 		let queryString = window.location;
 		let listingId = (queryString.search.slice(-7) * 1)
-
-		apartmentid: 9873003
-		dates: (2) ["2018/12/10", "2018/12/12"]
-		max: 5
-		minStay: 3
-		numRatings: 125
-		price: 120
-		stars: 4.95
 		
 		axios.get(`/listing/id${listingId}`)
 		.then(({data}) => {
 			this.setState(data)
+			console.log('dataDates', data.dates)
+			var badDates = data.dates.map(date => {
+				console.log(date, 'map')
+				return moment(date)
+			})
+			return badDates
+			
+		
 		}).catch((err)=>{
+			console.log(err)
+		}).then((momentsArr)=>{
+			this.setState({BAD_DATES: momentsArr})
+		
 		})
+		
+
+	}
+	componentDidUpdate(){
+
+	}
+	datesOff(){
 
 	}
 
+
+
 	render () {
+		const isDayBlocked = day => this.state.BAD_DATES.filter(d => d.isSame(day, 'day')).length > 0;
 		return (
 		<div className="Master">
 			
@@ -84,14 +103,20 @@ class App extends React.Component {
 				<Row><PriceStars price={this.state.price} guests={this.state.guests} rating={this.state.stars}/></Row>
 					Dates
 				<Row>
-					<DateRangePicker	startDate={this.state.startDate} // momentPropTypes.momentObj or null,
-										startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
-										endDate={this.state.endDate} // momentPropTypes.momentObj or null,
-										endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
-										onDatesChange={({ startDate, endDate }) =>{console.log(startDate); this.setState({ startDate, endDate })}} // PropTypes.func.isRequired,
-										focusedInput={this.state.focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
-										onFocusChange={focusedInput => this.setState({ focusedInput })} 
-										minimumNights={this.state.minStay}/>
+					<DateRangePicker	
+						startDate={this.state.startDate} // momentPropTypes.momentObj or null,
+						startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
+						endDate={this.state.endDate} // momentPropTypes.momentObj or null,
+						endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
+						onDatesChange={({ startDate, endDate }) =>{console.log(startDate); this.setState({ startDate, endDate })}} // PropTypes.func.isRequired,
+						focusedInput={this.state.focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
+						onFocusChange={focusedInput => this.setState({ focusedInput })} 
+						minimumNights={this.state.minStay}
+						numberOfMonths={1}
+						isDayBlocked={isDayBlocked}
+						hideKeyboardShortcutsPanel= {true}
+
+					/>
 				</Row>
 				<br/>
 				Guests
@@ -113,7 +138,7 @@ class App extends React.Component {
 				<Row>
 					<Col ><GuestsBar guests={this.state.guests} inf={this.state.infants} max={this.state.max} visible={this.state.listToggle} add={this.increaseGuests.bind(this)} minus={this.decreaseGuests.bind(this)}/></Col>	
 				</Row>
-				{(this.state.guests===this.state.max)?(<Total guests={this.state.guests} price={this.state.price}/>):(<br/>)}
+				{(this.state.guests===this.state.max && this.state.endDate)?(<Total start={this.state.startDate} end={this.state.endDate} guests={this.state.guests} price={this.state.price}/>):(<br/>)}
 				<br/>
 				<Row>
 					<button className="ButtonBook" type="button">
