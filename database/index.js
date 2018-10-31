@@ -1,53 +1,55 @@
 var mysql = require('promise-mysql');
 
-
-let aptData = {dates: [], price: 0, apartmentid: 0};
-
 let stringParse = (data)=>{
-    return JSON.parse(JSON.stringify(data))
+  return JSON.parse(JSON.stringify(data))
 };
 
-var getData = ()=>{
+var getData = (id)=>{
 
-    let aptData = {dates: [], price: 0, apartmentid: 0};
+	let aptData = {dates: [], price: 0, apartmentid: 0, minStay: 0, stars: 0, numRatings: 0, max:0};
 
-    return mysql.createConnection({
+	return mysql.createConnection({
 
-        host     : 'localhost',
-        user     : 'root',
-        password : '',
-        database : 'booking'
+		host     : 'localhost',
+		user     : 'root',
+		password : '',
+		database : 'booking'
 
-    }).then((conn)=>{
+	}).then((conn)=>{
+			
+		let aptDates = conn.query(`
+		SELECT date, price, apartmentid, minStay, stars, numRatings, max
+		FROM apartment t1
+		INNER JOIN dates t2 
+		ON t1.id = t2.apartment_id
+		WHERE t1.apartmentid=${id};
+		`);
 
-        let aptDates = conn.query(`
-        SELECT 
-        date, 
-        price,
-        apartmentid
-        FROM
-        apartment t1
-            INNER JOIN
-        dates t2 ON t1.id = t2.apartment_id;
-        `);
-    
-        conn.end();
-        return (aptDates);
+		conn.end();
+		return (aptDates);
 
-    }).then((raw)=>{
+	}).then((raw)=>{
 
-        let data = stringParse(raw)
-        aptData.price = data[0].price;
-        aptData.apartmentid = data[0].apartmentid;
+		let data = stringParse(raw)
+		aptData.price = data[0].price;
+		aptData.apartmentid = data[0].apartmentid;
+		aptData.max = data[0].max;
+		aptData.minStay = data[0].minStay;
+		aptData.stars = data[0].stars;
+		aptData.numRatings = data[0].numRatings;
 
-        data.forEach(({date}) => {
-            aptData.dates.push(date)
-        });
+		data.forEach(({date}) => {
+			aptData.dates.push(date)
+		});
 
-    }).then(()=>{
-        return aptData;
-    })
-    
+	}).then(()=>{
+		return aptData;
+	}).catch((err)=>{
+		console.log('query initialized err, works once componentsdidmount');		
+	})   
 }
 
 module.exports.getData = getData;
+
+
+
