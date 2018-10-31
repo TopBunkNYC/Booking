@@ -6,13 +6,9 @@ import GuestsBar from './components/guests/guestsBar.jsx'
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import moment from 'moment'; 
 import 'react-dates/initialize';
-import { DateRangePicker, SingleDatePicker, DayPickerRangeController } from 'react-dates';
+import { DateRangePicker} from 'react-dates';
 import 'react-dates/lib/css/_datepicker.css';
 import Total from './components/total.jsx';
-
-
-
-
 
 class App extends React.Component {
 	constructor(props) {
@@ -31,28 +27,25 @@ class App extends React.Component {
 			endDate: 0,
 			dates: ["11/01/2018"],
 			BAD_DATES: [moment()]
-		
 		}
 		this.toggleList = this.toggleList.bind(this)
 	}
+
 	toggleList(event){
 		event.preventDefault();
-		//console.log("pre toggle", this.state.listToggle)
 		if(this.state.listToggle === "ToggleStart"){
 			this.setState({listToggle: "ToggleOn", arrowImg: "up"})
 		} else{
 			this.setState({listToggle: "ToggleStart", arrowImg: "down"})
 		}		
-		
 	}
 
 	increaseGuests(){
-		console.log("add")
-
 		this.setState({
 			guests: this.state.guests + 1
 		});
 	}
+
 	decreaseGuests(event){
 		event.preventDefault();
 		this.setState({
@@ -68,31 +61,16 @@ class App extends React.Component {
 		axios.get(`/listing/id${listingId}`)
 		.then(({data}) => {
 			this.setState(data)
-			console.log('dataDates', data.dates)
 			var badDates = data.dates.map(date => {
-				console.log(date, 'map')
 				return moment(date)
 			})
 			return badDates
-			
-		
 		}).catch((err)=>{
 			console.log(err)
 		}).then((momentsArr)=>{
 			this.setState({BAD_DATES: momentsArr})
-		
 		})
-		
-
 	}
-	componentDidUpdate(){
-
-	}
-	datesOff(){
-
-	}
-
-
 
 	render () {
 		const isDayBlocked = day => this.state.BAD_DATES.filter(d => d.isSame(day, 'day')).length > 0;
@@ -104,18 +82,17 @@ class App extends React.Component {
 					Dates
 				<Row>
 					<DateRangePicker	
-						startDate={this.state.startDate} // momentPropTypes.momentObj or null,
-						startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
-						endDate={this.state.endDate} // momentPropTypes.momentObj or null,
-						endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
-						onDatesChange={({ startDate, endDate }) =>{console.log(startDate); this.setState({ startDate, endDate })}} // PropTypes.func.isRequired,
-						focusedInput={this.state.focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
+						startDate={this.state.startDate} 
+						startDateId="your_unique_start_date_id"
+						endDate={this.state.endDate} 
+						endDateId="your_unique_end_date_id"
+						onDatesChange={({ startDate, endDate }) =>{console.log(startDate); this.setState({ startDate, endDate })}} 
+						focusedInput={this.state.focusedInput} 
 						onFocusChange={focusedInput => this.setState({ focusedInput })} 
 						minimumNights={this.state.minStay}
 						numberOfMonths={1}
 						isDayBlocked={isDayBlocked}
 						hideKeyboardShortcutsPanel= {true}
-
 					/>
 				</Row>
 				<br/>
@@ -126,25 +103,25 @@ class App extends React.Component {
 								<Col  xs={6}  >
 									{`${this.state.guests} `} 
 									{(this.state.guests>1)? ("guests"): ("guest")}
-									
 								</Col>
 								<Col  xs={2} xsOffset={4}>  
 									<img src={require(`../dist/images/${this.state.arrowImg}-arrow.png`)} height='20px' width='20px' />				
 								</Col>
 							</Row>
 						</button>
-					
 				</Row>
 				<Row>
-					<Col ><GuestsBar guests={this.state.guests} inf={this.state.infants} max={this.state.max} visible={this.state.listToggle} add={this.increaseGuests.bind(this)} minus={this.decreaseGuests.bind(this)}/></Col>	
+					<Col>
+						<GuestsBar guests={this.state.guests} inf={this.state.infants} max={this.state.max} visible={this.state.listToggle} add={this.increaseGuests.bind(this)} minus={this.decreaseGuests.bind(this)}/>
+					</Col>	
 				</Row>
 				{(this.state.guests===this.state.max && this.state.endDate)?(<Total start={this.state.startDate} end={this.state.endDate} guests={this.state.guests} price={this.state.price}/>):(<br/>)}
 				<br/>
 				<Row>
 					<button className="ButtonBook" type="button">
-					<Row center="xs" >
-						<Col  xs={3} className="BookButtonFont">Book</Col>
-					</Row>
+						<Row center="xs" >
+							<Col  xs={3} className="BookButtonFont">Book</Col>
+						</Row>
 					</button>
 				</Row>
 			</Grid>

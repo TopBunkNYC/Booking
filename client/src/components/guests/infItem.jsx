@@ -13,11 +13,9 @@ class InfItem extends React.Component {
 		}
 	}
   onPlus(event){    
-
     this.setState({
       a: this.state.a + 1
     })
- 
     if(this.state.minus){
       this.setState({
         minus: false,
@@ -26,11 +24,8 @@ class InfItem extends React.Component {
     }
   }
 
-
   onMinus(event){
-
     event.preventDefault();
-    
     if(this.state.a===1){
       this.setState({
         minus: true,
@@ -41,37 +36,6 @@ class InfItem extends React.Component {
       this.setState({
       a: this.state.a - 1
     })}
-  }
-
-  componentDidMount(){
-
-  
-
-  }
-
-  componentDidUpdate() {
-
-    // if(this.state.plus === false && this.props.guests === this.props.max ){
-    //   this.setState({
-    //     plus: true,
-    //     colorPlus: 'ButtonASOff'
-    //   })
-    // } 
-    // if(this.state.plus=== true && this.props.guests === this.props.max-1) {
-    //   this.setState({
-    //     plus: false,
-    //     colorPlus: 'ButtonAddSub'
-    //   })
-    // }
-
-    // if(this.props.person==='Adults' && this.state.a===1 && !this.state.minus){ //overriding Adults minus functionalities to stop when = 1
-    //   console.log('turnOff')
-    //   this.setState({
-    //     minus: true,
-    //     colorSub: 'ButtonASOff'
-    //   })
-    // }
-
   }
 
   render() {
@@ -86,7 +50,9 @@ class InfItem extends React.Component {
               <div className="AddSubFont"> - </div>
             </button>
           </Col>
-          <Col xsOffset={1}  xs={1}>   {this.state.a}  </Col>
+          <Col xsOffset={1}  xs={1}>   
+            {this.state.a}  
+          </Col>
           <Col xsOffset={1} xs={1}>
             <button className={`${this.state.colorPlus}`} onClick={this.onPlus.bind(this)} disabled={this.state.plus}>
               <div className="AddSubFont"> + </div>

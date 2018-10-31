@@ -11,16 +11,20 @@ class GuestItem extends React.Component {
       colorSub: 'ButtonASOff',
       colorPlus: 'ButtonAddSub'
 		}
-	}
+  }
+  
   onPlus(event){
     
-    if(event){event.preventDefault()};
-    
+    if(event){
+      event.preventDefault()
+    };
 
     this.setState({
       a: this.state.a + 1
     })
+
     this.props.add(event);
+
     if(this.state.minus){
       this.setState({
         minus: false,
@@ -29,11 +33,9 @@ class GuestItem extends React.Component {
     }
   }
 
-
   onMinus(event){
-    event.preventDefault();
-    
 
+    event.preventDefault();
 
     if(this.state.a===1){
       this.setState({
@@ -45,7 +47,9 @@ class GuestItem extends React.Component {
       this.setState({
       a: this.state.a - 1
     })}
+
     this.props.minus(event);
+
   }
 
   componentDidMount(){
@@ -56,10 +60,7 @@ class GuestItem extends React.Component {
         minus: true,
         colorSub: 'ButtonASOff'
       })
-
-
     }
-
   }
 
   componentDidUpdate() {
@@ -84,7 +85,6 @@ class GuestItem extends React.Component {
         colorSub: 'ButtonASOff'
       })
     }
-
   }
 
   render() {

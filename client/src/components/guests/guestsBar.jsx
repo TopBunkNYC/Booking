@@ -11,20 +11,18 @@ class GuestsBar extends React.Component {
 		}
 	}
 
-	componentDidMount() {
-		
-	}
 	render () {
 		return (
 			<div className={`${this.props.visible}`}>
 				{["Adults", "Children"].map((person)=>{
-
 					return ( 
-					<GuestItem person={person} add={this.props.add} minus={this.props.minus} 
-					guests={this.props.guests} max={this.props.max}/>
+						<GuestItem 
+							person={person} add={this.props.add} minus={this.props.minus} 
+							guests={this.props.guests} max={this.props.max}
+						/>
 					)
 				})}
-				{<InfItem  person={"Infants"}  />}
+				<InfItem  person={"Infants"}/>
 				<Row > 
 					<Col xsOffset={1}  xs={11}>
 						<br/>
