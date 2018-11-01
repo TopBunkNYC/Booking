@@ -5,6 +5,7 @@ let stringParse = (data)=>{
 };
 
 var getData = (id)=>{
+	console.log('Database query', id)
 
 	let aptData = {dates: [], price: 0, apartmentid: 0, minStay: 0, stars: 0, numRatings: 0, max:0};
 

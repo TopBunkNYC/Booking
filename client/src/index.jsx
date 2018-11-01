@@ -10,7 +10,7 @@ import { DateRangePicker} from 'react-dates';
 import 'react-dates/lib/css/_datepicker.css';
 import Total from './components/total.jsx';
 
-class App extends React.Component {
+class Booking extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = { 
@@ -57,19 +57,21 @@ class App extends React.Component {
 
 		let queryString = window.location;
 		let listingId = (queryString.search.slice(-7) * 1)
-		
-		axios.get(`/listing/id${listingId}`)
-		.then(({data}) => {
-			this.setState(data)
-			var badDates = data.dates.map(date => {
-				return moment(date)
+		console.log('client current id', listingId)
+		if(listingId){
+			axios.get(`http://localhost:4000/listing/id${listingId}`)
+			.then(({data}) => {
+				this.setState(data)
+				var badDates = data.dates.map(date => {
+					return moment(date)
+				})
+				return badDates
+			}).catch((err)=>{
+				console.log(err)
+			}).then((momentsArr)=>{
+				this.setState({BAD_DATES: momentsArr})
 			})
-			return badDates
-		}).catch((err)=>{
-			console.log(err)
-		}).then((momentsArr)=>{
-			this.setState({BAD_DATES: momentsArr})
-		})
+		}
 	}
 
 	render () {
@@ -129,6 +131,6 @@ class App extends React.Component {
 	}
 }
 
-ReactDOM.render(<App />, document.getElementById('app'));
+ReactDOM.render(<Booking />, document.getElementById('booking'));
 
 
