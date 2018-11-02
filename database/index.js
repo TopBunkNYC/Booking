@@ -11,10 +11,15 @@ var getData = (id)=>{
 
 	return mysql.createConnection({
 
-		host     : 'localhost',
-		user     : 'root',
-		password : '',
+		// host     : 'localhost',   Local config
+		// user     : 'root',
+		// password : '',
+		// database : 'booking'
+		host: 'booking.cksae9ebsoyz.us-east-2.rds.amazonaws.com',
+		user: 'root',
+		password: 'louisotter',
 		database : 'booking'
+
 
 	}).then((conn)=>{
 			

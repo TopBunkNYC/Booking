@@ -81,7 +81,7 @@ class Booking extends React.Component {
 			
 			<Grid fluid>
 				<Row><PriceStars price={this.state.price} guests={this.state.guests} rating={this.state.stars}/></Row>
-					Dates
+					<div className="Headertext">Dates</div>
 				<Row>
 					<DateRangePicker	
 						startDate={this.state.startDate} 
@@ -98,7 +98,7 @@ class Booking extends React.Component {
 					/>
 				</Row>
 				<br/>
-				Guests
+				<div className="Headertext">Guests</div>
 				<Row>
 						<button onClick={this.toggleList} className="Button" type="button">
 							<Row >

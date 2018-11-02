@@ -8,7 +8,7 @@ const PriceStars = (props)=>{
 		<div>
       <Row>
         <Col xs={2}>{`$${Math.round(props.guests*props.price*0.3)+props.price}   `}</Col>
-        <Col xs={9} xsOffset={1}>{` per night`}</Col>
+        <Col xs={8} xsOffset={2} className="Headertext">{` per night`}</Col>
       </Row>
 			<Ratings rating={props.rating} widgetDimensions="11px" widgetSpacings=".4px">
 			   <Ratings.Widget widgetRatedColor="#008489" />
