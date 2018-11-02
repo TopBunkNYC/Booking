@@ -10,7 +10,7 @@ var app = express();
 
 app.use("default", morgan)
 app.use(bodyParser.json());
-// app.use(cors());
+app.use(cors());
 
 app.use(express.static(path.join(__dirname + '/../client/dist')));
 
