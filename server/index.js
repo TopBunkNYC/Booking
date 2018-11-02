@@ -21,6 +21,8 @@ app.get('/listing/id:id', (req, res)=>{
 	database.getData(id).then((dataObj)=>{
 		// console.log('data', dataObj)
 		res.status(200).send(dataObj);
+	}).catch((err)=>{
+		res.send(err)
 	})
 	
 })
