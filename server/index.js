@@ -14,7 +14,7 @@ app.use(cors());
 
 app.use(express.static(path.join(__dirname + '/../client/dist')));
 
-app.get('/listing/id:id', (req, res)=>{ 
+app.get('/bookinglisting/id:id', (req, res)=>{ 
 
 	id = req.params.id
 	console.log('getting request', id, req.url)
