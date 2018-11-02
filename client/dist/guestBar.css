@@ -15,10 +15,14 @@
 
 }
 
-.DateInput{
-  position: static;
+.DateInput_1{
+  position: static !important;
   width: 175px !important;
 
+}
+.DateIn{
+  position: static;
+  width: 175px !important;
 }
 .DateInput_input {
   max-width: 150px;
