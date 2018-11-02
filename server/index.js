@@ -2,7 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const database = require('../database/index.js')
 const path = require('path')
-const port = process.env.PORT || 4000;
+const port = 4000;
 const morgan = require('morgan');
 const cors = require('cors')
 
@@ -35,4 +35,4 @@ app.listen(port, ()=>{
     console.log(`listening on port ${port}`)
 })
 
-app.listen(process.env.PORT)
+// app.listen(process.env.PORT)
