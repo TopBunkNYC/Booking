@@ -15,16 +15,12 @@ app.use(cors());
 app.use(express.static(path.join(__dirname + '/../client/dist')));
 
 app.get('/bookinglisting/id:id', (req, res)=>{ 
-
 	id = req.params.id
-	console.log('getting request', id, req.url)
 	database.getData(id).then((dataObj)=>{
-		// console.log('data', dataObj)
 		res.status(200).send(dataObj);
 	}).catch((err)=>{
 		res.send(err)
 	})
-	
 })
 
 // app.use('/bundle.js', express.static(path.join(__dirname + '/../client/dist')));

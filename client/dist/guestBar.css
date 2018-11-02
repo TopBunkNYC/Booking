@@ -17,11 +17,11 @@
 
 .DateInput{
   position: static;
-  width: 175px;
+  width: 175px !important;
+
 }
 .DateInput_input {
   max-width: 150px;
-
 } 
 
 
