@@ -55,7 +55,6 @@ var getListing = (id)=>{
 }
 
 var createListing = (data)=>{
-  console.log(data);
 	// let aptData = {price: 100, apartmentid: 9873888, minStay: 99, stars: 4, numRatings: 99, max:3};
 	return mysql.createConnection({
 
@@ -74,7 +73,6 @@ var createListing = (data)=>{
 }
 
 var updateListing = (id, data) => {
-	console.log(data);
 	let aptid = 9873987
   let aptData = {price: 222, minStay: 22, stars: 22, numRatings: 22, max:2};
 	return mysql.createConnection({
@@ -93,8 +91,7 @@ var updateListing = (id, data) => {
 	})  
 }
 
-var deleteListing = (id, data) => {
-	console.log(data);
+var deleteListing = (id) => {
 	let aptid = 9873987
 	return mysql.createConnection({
 
