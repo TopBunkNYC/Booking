@@ -1,10 +1,10 @@
 var mysql = require('promise-mysql');
 
-let stringParse = (data)=>{
+let stringParse = (data) => {
   return JSON.parse(JSON.stringify(data))
 };
 
-var getListing = (id)=>{
+var getListing = (id) => {
 
 	let aptData = {dates: [], price: 0, apartmentid: 0, minStay: 0, stars: 0, numRatings: 0, max:0};
 
@@ -48,7 +48,7 @@ var getListing = (id)=>{
 	})   
 }
 
-var createListing = (data)=>{
+var createListing = (data) => {
 	// let aptData = {price: 100, apartmentid: 9873888, minStay: 99, stars: 4, numRatings: 99, max:3};
 	return mysql.createConnection({
 
