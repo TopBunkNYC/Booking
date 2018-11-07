@@ -93,10 +93,30 @@ var updateListing = (id, data) => {
 	})  
 }
 
+var deleteListing = (id, data) => {
+	console.log(data);
+	let aptid = 9873987
+	return mysql.createConnection({
+
+		host     : 'localhost',
+		user     : 'root',
+		password : '',
+		database : 'booking'
+
+	}).then((conn)=>{
+		let result = conn.query(`DELETE FROM apartment WHERE apartmentid = ?`, aptid);
+		conn.end();
+		return result;
+	}).catch((err)=>{
+		console.log(err);		
+	})  
+}
+
 module.exports = {
 	getListing,
 	createListing,
-	updateListing
+	updateListing,
+	deleteListing
 }
 
 

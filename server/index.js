@@ -33,6 +33,12 @@ app.put('/bookinglisting', (req, res)=>{
 		.catch((err)=>{ console.log('failure'); res.send(err)})
 })
 
+app.delete('/bookinglisting', (req, res)=>{ 
+	database.deleteListing(1)
+		.then((dataObj)=>{ console.log('success'); console.log(dataObj); res.status(200).send(dataObj)})
+		.catch((err)=>{ console.log('failure'); res.send(err)})
+})
+
 // app.use('/bundle.js', express.static(path.join(__dirname + '/../client/dist')));
 
 app.get('/*', (req, res)=>{
