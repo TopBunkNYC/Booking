@@ -5,7 +5,6 @@ let stringParse = (data)=>{
 };
 
 var getListing = (id)=>{
-	console.log('Database query', id)
 
 	let aptData = {dates: [], price: 0, apartmentid: 0, minStay: 0, stars: 0, numRatings: 0, max:0};
 
@@ -15,11 +14,6 @@ var getListing = (id)=>{
 		user     : 'root',
 		password : '',
 		database : 'booking'
-		// host: 'booking.cksae9ebsoyz.us-east-2.rds.amazonaws.com',
-		// user: 'root',
-		// password: 'louisotter',
-		// database : 'booking'
-
 
 	}).then((conn)=>{
 			
