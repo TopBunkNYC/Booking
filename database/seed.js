@@ -83,7 +83,7 @@ const seedBookedDates = async () => {
     }
     // console.log(bookedDatesBatch);
     await knex.batchInsert('bookings.bookeddates', bookedDatesBatch, 10000);
-    console.log(`${i * 10000 + 10000} listings inserted`);
+    console.log(`bookedDates for ${i * 10000 + 10000} listings inserted`);
   }
 }
 

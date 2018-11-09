@@ -11,7 +11,8 @@
     "start-pm2": "pm2 start ./server/index.js",
     "list-pm2": "pm2 list",
     "pm2-server": "pm2 show server",
-    "stop-pm2": "pm2 stop 0"
+    "stop-pm2": "pm2 stop 0",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -56,6 +57,7 @@
     "babel-preset-stage-0": "^6.24.1",
     "css-loader": "^0.28.11",
     "file-loader": "^2.0.0",
+    "jest": "^23.6.0",
     "node-sass": "^4.8.3",
     "sass-loader": "^6.0.7",
     "style-loader": "^0.20.3",
