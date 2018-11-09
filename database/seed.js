@@ -2,7 +2,7 @@ let knex = require('./index.js');
 
 const randomNumberUpTo = (limit) => Math.floor(Math.random() * limit);
 
-// create listings
+// create listings and insert in batches of 10,000
 const seedListings = async () => {
   for (let i = 0; i < 1000; i++) {
     let listingsBatch = [];
@@ -28,7 +28,7 @@ const seedListings = async () => {
 
 seedListings();
 
-// create bookedDates
+// create bookedDates and insert in batches of 10,000
 const seedBookedDates = async () => {
   let months = [11,12,1,2];
   let daysInMonth = {
@@ -43,6 +43,8 @@ const seedBookedDates = async () => {
     1: 2019,
     2: 2019
   }
+
+  // create array of all possible days for booking (all days Nov '18 through Feb '19)
   let days = [];
   for (let month of months) {
     for (let day = 1; day < daysInMonth[month] + 1; day++) {
@@ -58,12 +60,16 @@ const seedBookedDates = async () => {
     }
   }
 
+  // for each batch of 10,000
   for (let i = 0; i < 1000; i++) {
     let bookedDatesBatch = [];
+    // for each listing
     for (let j = 0; j < 10000; j++) {
+      // get minimum nights' stay for each listing, to ensure random bookedDates conform to rule
       let minStay = await knex.select('minstay').from('bookings.listings').where('id', (j + 1) + i * 10000).limit(1);
       minstay = minStay[0]['minstay'];
-      debugger;
+
+      // add stays of random lengths with random gaps in between until end of available booking period
       let curDay = 0;
       curDay += randomNumberUpTo(10);
       while (curDay < days.length - 1 - minstay) {
