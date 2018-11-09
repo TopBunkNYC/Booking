@@ -10,10 +10,10 @@ CREATE TABLE apartment (
 	id int NOT NULL AUTO_INCREMENT,
 	apartmentid int NOT NULL,
 	price int NOT NULL,
-    max int NOT NULL,
-    minStay int NOT NULL,
-    stars dec(4,2) NOT NULL,
-    numRatings int NOT NULL,
+  max int NOT NULL,
+  minStay int NOT NULL,
+  stars dec(4,2) NOT NULL,
+  numRatings int NOT NULL,
 	PRIMARY KEY (id)
 
 );

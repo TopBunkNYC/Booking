@@ -59,7 +59,9 @@ class Booking extends React.Component {
 		let listingId = (queryString.search.slice(-7) * 1)
 		console.log('client current id', listingId)
 		if(listingId){
-			axios.get(`/bookinglisting/id${listingId}`)
+			axios.get('/bookinglisting', {
+				params: { id: listingId }
+			})
 			.then(({data}) => {
 				this.setState(data)
 				var badDates = data.dates.map(date => {
