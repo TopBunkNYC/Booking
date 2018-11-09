@@ -1,33 +1,32 @@
-let faker = require('faker');
 let knex = require('./index.js');
 
 const randomNumberUpTo = (limit) => Math.floor(Math.random() * limit);
 
 // create listings
-// const seedListings = async () => {
-//   for (let i = 0; i < 1000; i++) {
-//     let listingsBatch = [];
-//     for (let j = 0; j < 10000; j++) {
-//       let price = 50 + randomNumberUpTo(400);
-//       let maxguests = 1 + randomNumberUpTo(6);
-//       let minstay = 1 + randomNumberUpTo(2);
-//       let stars = (1 + (Math.random() * 4)).toFixed(2);
-//       let numratings = randomNumberUpTo(110);
-//       let listing = {
-//         price,
-//         maxguests,
-//         minstay,
-//         stars,
-//         numratings
-//       }
-//       listingsBatch.push(listing)
-//     }
-//     await knex.batchInsert('bookings.listings', listingsBatch, 10000);
-//     console.log(`${i * 10000 + 10000} listings inserted`);
-//   }
-// }
+const seedListings = async () => {
+  for (let i = 0; i < 1000; i++) {
+    let listingsBatch = [];
+    for (let j = 0; j < 10000; j++) {
+      let price = 50 + randomNumberUpTo(400);
+      let maxguests = 1 + randomNumberUpTo(6);
+      let minstay = 1 + randomNumberUpTo(2);
+      let stars = (1 + (Math.random() * 4)).toFixed(2);
+      let numratings = randomNumberUpTo(110);
+      let listing = {
+        price,
+        maxguests,
+        minstay,
+        stars,
+        numratings
+      }
+      listingsBatch.push(listing)
+    }
+    await knex.batchInsert('bookings.listings', listingsBatch, 10000);
+    console.log(`${i * 10000 + 10000} listings inserted`);
+  }
+}
 
-// seedListings();
+seedListings();
 
 // create bookedDates
 const seedBookedDates = async () => {
@@ -58,7 +57,7 @@ const seedBookedDates = async () => {
       days.push(`${monthToYear[month]}-${monthString}-${dayString}`)
     }
   }
-  // console.log(days);
+
   for (let i = 0; i < 1000; i++) {
     let bookedDatesBatch = [];
     for (let j = 0; j < 10000; j++) {
@@ -81,7 +80,7 @@ const seedBookedDates = async () => {
         curDay += randomNumberUpTo(10);
       }
     }
-    // console.log(bookedDatesBatch);
+
     await knex.batchInsert('bookings.bookeddates', bookedDatesBatch, 10000);
     console.log(`${i * 10000 + 10000} listings inserted`);
   }
