@@ -81,7 +81,6 @@ const seedBookedDates = async () => {
         curDay += randomNumberUpTo(10);
       }
     }
-    // console.log(bookedDatesBatch);
     await knex.batchInsert('bookings.bookeddates', bookedDatesBatch, 10000);
     console.log(`bookedDates for ${i * 10000 + 10000} listings inserted`);
   }
