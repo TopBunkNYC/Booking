@@ -14,6 +14,7 @@ var listingSchema = new mongoose.Schema({
 
 var Listing = mongoose.model('Listing', listingSchema);
 
+// create listings and insert in batches of 100
 const seedListings = async () => {
   let t1 = Date.now();
   for (let batch = 0; batch < 100000; batch++) {
@@ -61,6 +62,8 @@ async function generateBookedDates(minStay) {
     1: 2019,
     2: 2019
   }
+
+  // create array of all possible days for booking (all days Nov '18 through Feb '19)
   let days = [];
   for (let month of months) {
     for (let day = 1; day < daysInMonth[month] + 1; day++) {
@@ -80,8 +83,10 @@ async function generateBookedDates(minStay) {
   let curDay = 0;
   curDay += randomNumberUpTo(10);
   while (curDay < days.length - 1 - minStay) {
+    // ensure length of stay conforms to minStay rule for listing
     let numDays = minStay + randomNumberUpTo(3);
     let startingDay = curDay;
+    // add stays of random lengths with random gaps in between until end of available booking period
     for (let dayOfStay = curDay; dayOfStay < (startingDay + numDays); dayOfStay++) {
       let bookedDate = days[dayOfStay];
       bookedDates.push(bookedDate);
@@ -91,29 +96,3 @@ async function generateBookedDates(minStay) {
   }
   return bookedDates;
 }
-
-
-
-// create listings
-// const seedListings = async () => {
-//   for (let i = 0; i < 1000; i++) {
-//     let listingsBatch = [];
-//     for (let j = 0; j < 10000; j++) {
-//       let price = 50 + randomNumberUpTo(400);
-//       let maxguests = 1 + randomNumberUpTo(6);
-//       let minStay = 1 + randomNumberUpTo(2);
-//       let stars = (1 + (Math.random() * 4)).toFixed(2);
-//       let numratings = randomNumberUpTo(110);
-//       let listing = {
-//         price,
-//         maxguests,
-//         minStay,
-//         stars,
-//         numratings
-//       }
-//       listingsBatch.push(listing)
-//     }
-//     await knex.batchInsert('bookings.listings', listingsBatch, 10000);
-//     console.log(`${i * 10000 + 10000} listings inserted`);
-//   }
-// }
