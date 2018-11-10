@@ -24,7 +24,7 @@ const seedListings = async () => {
       let price = 50 + randomNumberUpTo(400);
       let maxGuests = 1 + randomNumberUpTo(6);
       let minStay = 1 + randomNumberUpTo(2);
-      let stars = (1 + (Math.random() * 4)).toFixed(2);
+      let stars = Number((1 + (Math.random() * 4)).toFixed(2));
       let numRatings = randomNumberUpTo(110);
       let bookedDates = await generateBookedDates(minStay);
       let listingProps = {
