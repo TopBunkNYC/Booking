@@ -23,8 +23,8 @@ app.get('/bookinglisting', (req, res)=>{
 
 app.post('/bookinglisting', (req, res)=>{ 
 	database.createListing(req.body)
-		.then((dataObj)=>{ console.log('success'); console.log(dataObj); res.status(200).send(dataObj)})
-		.catch((err)=>{ console.log('failure'); res.send(err)})
+		.then((dataObj)=>{ res.status(200).send(dataObj)})
+		.catch((err)=>{ res.send(err)})
 })
 
 app.put('/bookinglisting', (req, res)=>{ 
