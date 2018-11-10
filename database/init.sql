@@ -1,5 +1,7 @@
 CREATE SCHEMA bookings;
 
+DROP TABLE bookings.listings;
+
 CREATE TABLE bookings.listings(
   id SERIAL PRIMARY KEY,
   price INT,
@@ -8,6 +10,8 @@ CREATE TABLE bookings.listings(
   stars NUMERIC(4,2),
   numRatings INT
 );
+
+DROP TABLE bookings.bookedDates;
 
 CREATE TABLE bookings.bookedDates(
   id SERIAL PRIMARY KEY,

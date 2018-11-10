@@ -3,9 +3,11 @@ var knex = require('knex')({
   version: '10.5',
   connection: {
     host : '127.0.0.1',
-    database : 'mydb'
+    database : 'topbunk'
   }
 });
+
+module.exports = knex;
 
 // knex.schema.createTable('users', function (table) {
 //   table.increments();
