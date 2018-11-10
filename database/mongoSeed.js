@@ -49,6 +49,8 @@ const seedListings = async () => {
 seedListings();
 
 async function generateBookedDates(minStay) {
+
+  // create objects to map months to corresponding number of days in month and to year
   let months = [11,12,1,2];
   let daysInMonth = {
     11: 30,
