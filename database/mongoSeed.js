@@ -88,4 +88,4 @@ async function generateBookedDates(minStay) {
   return bookedDates;
 }
 
-module.exports = Listing;
+module.exports = generateBookedDates;

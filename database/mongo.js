@@ -4,7 +4,7 @@ mongoose.connect('mongodb://localhost/topBunk');
 var db = mongoose.connection;
 
 var listingSchema = new mongoose.Schema({
-  id: Number,
+  _id: { type: Number, unique: true },
   price: Number,
   maxGuests: Number,
   minStay: Number,
