@@ -1,18 +1,7 @@
-let db = require('./mongo.js');
+let Listing = require('./mongo.js');
 let mongoose = require('mongoose');
 const randomNumberUpTo = (limit) => Math.floor(Math.random() * limit);
 
-var listingSchema = new mongoose.Schema({
-  id: Number,
-  price: Number,
-  maxGuests: Number,
-  minStay: Number,
-  stars: mongoose.Decimal128,
-  numRatings: Number,
-  bookedDates: [String]
-})
-
-var Listing = mongoose.model('Listing', listingSchema);
 
 // create listings and insert in batches of 100
 const seedListings = async () => {
@@ -98,3 +87,5 @@ async function generateBookedDates(minStay) {
   }
   return bookedDates;
 }
+
+module.exports = Listing;

@@ -2,9 +2,17 @@ var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/topBunk');
 
 var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function() {
-  
-  module.exports = db;
 
-});
+var listingSchema = new mongoose.Schema({
+  id: Number,
+  price: Number,
+  maxGuests: Number,
+  minStay: Number,
+  stars: mongoose.Decimal128,
+  numRatings: Number,
+  bookedDates: [String]
+})
+
+var Listing = mongoose.model('Listing', listingSchema);
+
+module.exports = Listing;
