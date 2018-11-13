@@ -9,7 +9,7 @@ const seedListings = async () => {
   for (let batch = 0; batch < 100000; batch++) {
     let listingBatch = [];
     for (let listing = 0; listing < 100; listing++) {
-      let id = (batch * 100) + (listing + 1);
+      let _id = (batch * 100) + (listing + 1);
       let price = 50 + randomNumberUpTo(400);
       let maxGuests = 1 + randomNumberUpTo(6);
       let minStay = 1 + randomNumberUpTo(2);
@@ -17,7 +17,7 @@ const seedListings = async () => {
       let numRatings = randomNumberUpTo(110);
       let bookedDates = await generateBookedDates(minStay);
       let listingProps = {
-        id,
+        _id,
         price,
         maxGuests,
         minStay,
