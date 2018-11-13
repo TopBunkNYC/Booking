@@ -1,5 +1,5 @@
 let knex = require('./../database/index.js');
-let Listing = require('./../database/mongo.js');
+let { db, Listing } = require('./../database/mongo.js');
 // let generateBookedDates = require('./../database/mongoSeed')
 
 const randomNumberUpTo = (limit) => Math.floor(Math.random() * limit);
@@ -8,7 +8,7 @@ let id = randomNumberUpTo(10000000);
 
 jest.setTimeout(60000);
 
-let testIterations = 10000;
+let testIterations = 100;
 
 // describe('PostgresQL Query Speeds', () => {
 //   test('fetching listing takes <= 50ms', async () => {
@@ -55,33 +55,40 @@ describe('Mongo Query Speeds', () => {
   //     // console.log(`Mongo listing fetch speed: ${timeElapsed}`)
   //   }
   //   let averageFetchSpeed = totalTimeElapsed / testIterations;
-  //   expect(averageFetchSpeed).toBeLessThanOrEqual(50);
   //   console.log(`Average Mongo listing fetch speed: ${averageFetchSpeed}`)
+  //   expect(averageFetchSpeed).toBeLessThanOrEqual(50);  
 
   // });
   
   test('writing listing takes <= 50ms', async () => {
-    let id = 100000000;
-    let price = 50 + randomNumberUpTo(400);
-    let maxGuests = 1 + randomNumberUpTo(6);
-    let minStay = 1 + randomNumberUpTo(2);
-    let stars = Number((1 + (Math.random() * 4)).toFixed(2));
-    let numRatings = randomNumberUpTo(110);
-    let bookedDates = await generateBookedDates(minStay);
-    let listingProps = {
-      price,
-      maxGuests,
-      minStay,
-      stars,
-      numRatings,
-      bookedDates
+    let totalTimeElapsed = 0;
+    for (let i = 0; i < testIterations; i++) {
+      let price = 50 + randomNumberUpTo(400);
+      let maxGuests = 1 + randomNumberUpTo(6);
+      let minStay = 1 + randomNumberUpTo(2);
+      let stars = Number((1 + (Math.random() * 4)).toFixed(2));
+      let numRatings = randomNumberUpTo(110);
+      let bookedDates = await generateBookedDates(minStay);
+      let listingProps = {
+        price,
+        maxGuests,
+        minStay,
+        stars,
+        numRatings,
+        bookedDates
+      }
+      let newListing = new Listing(listingProps);
+      let t1 = Date.now();
+      let savedListing = await newListing.save();
+      let timeElapsed = Date.now() - t1;
+      totalTimeElapsed += timeElapsed;
+      await Listing.deleteOne({_id: savedListing._id});
     }
-    let newListing = new Listing(listingProps);
-    let t1 = Date.now();
-    let savedListing = await newListing.save();
-    let timeElapsed = Date.now() - t1;
-    expect(timeElapsed).toBeLessThanOrEqual(50);
-    console.log(savedListing);
+    let averageWriteSpeed = totalTimeElapsed / testIterations;
+    db.close();
+    console.log(`Average Mongo listing write speed: ${averageWriteSpeed}`)
+    expect(averageWriteSpeed).toBeLessThanOrEqual(50);
+
   });
 })
 
