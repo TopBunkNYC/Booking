@@ -27,7 +27,7 @@ const seedListings = async () => {
       let newListing = new Listing(listingProps);
       listingBatch.push(newListing);
     }
-    await Listing.insertMany(listingBatch)
+    await Listing.insertMany(listingBatch);
     console.log(`${100*batch + 100} listings inserted`);
   }
   let timeElapsed = Date.now() - t1;

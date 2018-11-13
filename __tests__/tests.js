@@ -8,89 +8,97 @@ let id = randomNumberUpTo(10000000);
 
 jest.setTimeout(60000);
 
-let testIterations = 100;
+let testIterations = 1;
 
-// describe('PostgresQL Query Speeds', () => {
-//   test('fetching listing takes <= 50ms', async () => {
-//     let t1 = Date.now();
-//     await knex.select().from('bookings.listings').where('id', id);
-//     let timeElapsed = Date.now() - t1;
-//     expect(timeElapsed).toBeLessThanOrEqual(50);
-//     console.log(`PostGres listing fetch speed: ${timeElapsed}`)
-//   });
-  
-//   test('writing listing takes <= 50ms', async () => {
-//     let price = 50 + randomNumberUpTo(400);
-//     let maxguests = 1 + randomNumberUpTo(6);
-//     let minstay = 1 + randomNumberUpTo(2);
-//     let stars = (1 + (Math.random() * 4)).toFixed(2);
-//     let numratings = randomNumberUpTo(110);
-//     let listing = {
-//       price,
-//       maxguests,
-//       minstay,
-//       stars,
-//       numratings
-//     }
-//     let t1 = Date.now();
-//     let insertId = await knex('bookings.listings').insert(listing).returning('id');
-//     let timeElapsed = Date.now() - t1;
-//     expect(timeElapsed).toBeLessThanOrEqual(50);
-//     console.log(`PostGres listing write speed: ${timeElapsed}`)
-//     insertId = insertId[0];
-//     await knex('bookings.listings').where('id', insertId).del();
-//   });
-// })
+describe('PostgresQL Query Speeds', () => {
+  test('fetching listing and bookeddates takes <= 50ms', async () => {
 
-describe('Mongo Query Speeds', () => {
-
-  // test('fetching listing takes <= 50ms', async () => {
   //   let totalTimeElapsed = 0;
   //   for (let i = 0; i < testIterations; i++) {
   //     let id = randomNumberUpTo(10000000);
   //     let t1 = Date.now();
-  //     await MongoListing.find({'id': id});
+  //     let listing = await knex.select().from('bookings.listings').where('id', id).limit(1);
+  //     let bookeddates = await knex.select().from('bookings.bookeddates').where('listing_id', id);
   //     let timeElapsed = Date.now() - t1;
   //     totalTimeElapsed += timeElapsed;
-  //     // console.log(`Mongo listing fetch speed: ${timeElapsed}`)
   //   }
   //   let averageFetchSpeed = totalTimeElapsed / testIterations;
-  //   console.log(`Average Mongo listing fetch speed: ${averageFetchSpeed}`)
+  //   console.log(`Average PostGres listing fetch speed: ${averageFetchSpeed}`)
   //   expect(averageFetchSpeed).toBeLessThanOrEqual(50);  
-
+    
   // });
   
   test('writing listing takes <= 50ms', async () => {
-    let totalTimeElapsed = 0;
-    for (let i = 0; i < testIterations; i++) {
-      let price = 50 + randomNumberUpTo(400);
-      let maxGuests = 1 + randomNumberUpTo(6);
-      let minStay = 1 + randomNumberUpTo(2);
-      let stars = Number((1 + (Math.random() * 4)).toFixed(2));
-      let numRatings = randomNumberUpTo(110);
-      let bookedDates = await generateBookedDates(minStay);
-      let listingProps = {
-        price,
-        maxGuests,
-        minStay,
-        stars,
-        numRatings,
-        bookedDates
-      }
-      let newListing = new Listing(listingProps);
-      let t1 = Date.now();
-      let savedListing = await newListing.save();
-      let timeElapsed = Date.now() - t1;
-      totalTimeElapsed += timeElapsed;
-      await Listing.deleteOne({_id: savedListing._id});
+    let price = 50 + randomNumberUpTo(400);
+    let maxguests = 1 + randomNumberUpTo(6);
+    let minstay = 1 + randomNumberUpTo(2);
+    let stars = (1 + (Math.random() * 4)).toFixed(2);
+    let numratings = randomNumberUpTo(110);
+    let listing = {
+      price,
+      maxguests,
+      minstay,
+      stars,
+      numratings
     }
-    let averageWriteSpeed = totalTimeElapsed / testIterations;
-    db.close();
-    console.log(`Average Mongo listing write speed: ${averageWriteSpeed}`)
-    expect(averageWriteSpeed).toBeLessThanOrEqual(50);
-
+    let t1 = Date.now();
+    let insertId = await knex('bookings.listings').insert(listing).returning('id');
+    let timeElapsed = Date.now() - t1;
+    expect(timeElapsed).toBeLessThanOrEqual(50);
+    console.log(`PostGres listing write speed: ${timeElapsed}`)
+    insertId = insertId[0];
+    await knex('bookings.listings').where('id', insertId).del();
   });
 })
+
+// describe('Mongo Query Speeds', () => {
+
+//   test('fetching listing takes <= 50ms', async () => {
+//     let totalTimeElapsed = 0;
+//     for (let i = 0; i < testIterations; i++) {
+//       let _id = randomNumberUpTo(10000000);
+//       let t1 = Date.now();
+//       await Listing.findOne({'_id': _id});
+//       let timeElapsed = Date.now() - t1;
+//       totalTimeElapsed += timeElapsed;
+//     }
+//     let averageFetchSpeed = totalTimeElapsed / testIterations;
+//     console.log(`Average Mongo listing fetch speed: ${averageFetchSpeed}`)
+//     expect(averageFetchSpeed).toBeLessThanOrEqual(50);  
+
+//   });
+  
+//   test('writing listing takes <= 50ms', async () => {
+//     let totalTimeElapsed = 0;
+//     for (let i = 0; i < testIterations; i++) {
+//       let price = 50 + randomNumberUpTo(400);
+//       let maxGuests = 1 + randomNumberUpTo(6);
+//       let minStay = 1 + randomNumberUpTo(2);
+//       let stars = Number((1 + (Math.random() * 4)).toFixed(2));
+//       let numRatings = randomNumberUpTo(110);
+//       let bookedDates = await generateBookedDates(minStay);
+//       let listingProps = {
+//         price,
+//         maxGuests,
+//         minStay,
+//         stars,
+//         numRatings,
+//         bookedDates
+//       }
+//       let newListing = new Listing(listingProps);
+//       let t1 = Date.now();
+//       let savedListing = await newListing.save();
+//       let timeElapsed = Date.now() - t1;
+//       totalTimeElapsed += timeElapsed;
+//       await Listing.deleteOne({_id: savedListing._id});
+//     }
+//     let averageWriteSpeed = totalTimeElapsed / testIterations;
+//     db.close();
+//     console.log(`Average Mongo listing write speed: ${averageWriteSpeed}`)
+//     expect(averageWriteSpeed).toBeLessThanOrEqual(50);
+
+//   });
+// })
 
 // I will delete the below and require generateBookedDates instead
 // when I refactor after several open branches of mine are merged into master.
