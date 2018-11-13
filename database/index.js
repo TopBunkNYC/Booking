@@ -7,7 +7,7 @@ var knex = require('knex')({
   }
 });
 
-// module.exports = knex;
+module.exports = knex;
 
 // knex.schema.createTable('users', function (table) {
 //   table.increments();
