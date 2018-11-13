@@ -2,7 +2,6 @@ let Listing = require('./mongo.js');
 let mongoose = require('mongoose');
 const randomNumberUpTo = (limit) => Math.floor(Math.random() * limit);
 
-
 // create listings and insert in batches of 100
 const seedListings = async () => {
   let t1 = Date.now();
