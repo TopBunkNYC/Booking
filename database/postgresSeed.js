@@ -4,15 +4,24 @@ const randomNumberUpTo = (limit) => Math.floor(Math.random() * limit);
 
 // create listings and insert in batches of 10,000
 const seedListings = async () => {
-  for (let i = 0; i < 1000; i++) {
+  let t1 = Date.now();
+  for (let i = 0; i < 20000; i++) {
     let listingsBatch = [];
-    for (let j = 0; j < 10000; j++) {
+    let bookedDatesBatch = [];
+    let batchSize = 500;
+    
+    for (let j = 0; j < batchSize; j++) {
+
+      // create listing
       let price = 50 + randomNumberUpTo(400);
       let maxguests = 1 + randomNumberUpTo(6);
       let minstay = 1 + randomNumberUpTo(2);
       let stars = (1 + (Math.random() * 4)).toFixed(2);
       let numratings = randomNumberUpTo(110);
+
+      let listing_id = (i * batchSize) + j + 1;
       let listing = {
+        id: listing_id,
         price,
         maxguests,
         minstay,
@@ -20,16 +29,24 @@ const seedListings = async () => {
         numratings
       }
       listingsBatch.push(listing)
+
+      // create bookedDates 
+      let bookedDatesArr = await generateBookedDates(minstay, listing_id);
+      bookedDatesBatch = bookedDatesBatch.concat(bookedDatesArr); 
     }
     await knex.batchInsert('bookings.listings', listingsBatch, 10000);
-    console.log(`${i * 10000 + 10000} listings inserted`);
+    await knex.batchInsert('bookings.bookeddates', bookedDatesBatch, 10000);
+    console.log(`${i * batchSize + batchSize} listings inserted`);
   }
+  let timeElapsed = Date.now() - t1;
+  console.log(`timeElapsed: ${timeElapsed}`);
 }
 
 seedListings();
 
-// create bookedDates and insert in batches of 10,000
-const seedBookedDates = async () => {
+async function generateBookedDates(minStay, listing_id) {
+
+  // create objects to map months to corresponding number of days in month and to year
   let months = [11,12,1,2];
   let daysInMonth = {
     11: 30,
@@ -60,36 +77,23 @@ const seedBookedDates = async () => {
     }
   }
 
-  // for each batch of 10,000
-  for (let i = 0; i < 1000; i++) {
-    let bookedDatesBatch = [];
-    // for each listing
-    for (let j = 0; j < 10000; j++) {
-      // get minimum nights' stay for each listing, to ensure random bookedDates conform to rule
-      let minStay = await knex.select('minstay').from('bookings.listings').where('id', (j + 1) + i * 10000).limit(1);
-      minstay = minStay[0]['minstay'];
-
-      // add stays of random lengths with random gaps in between until end of available booking period
-      let curDay = 0;
-      curDay += randomNumberUpTo(10);
-      while (curDay < days.length - 1 - minstay) {
-        let numDays = minstay + randomNumberUpTo(3);
-        let startingDay = curDay;
-        for (let dayOfStay = curDay; dayOfStay < (startingDay + numDays); dayOfStay++) {
-          let bookedDate = {
-            date: days[dayOfStay],
-            listing_id: (j + 1) + i * 10000
-          }
-          bookedDatesBatch.push(bookedDate);
-          curDay++;
-        }
-        curDay += randomNumberUpTo(10);
+  let bookedDates = [];
+  let curDay = 0;
+  curDay += randomNumberUpTo(10);
+  while (curDay < days.length - 1 - minStay) {
+    // ensure length of stay conforms to minStay rule for listing
+    let numDays = minStay + randomNumberUpTo(3);
+    let startingDay = curDay;
+    // add stays of random lengths with random gaps in between until end of available booking period
+    for (let dayOfStay = curDay; dayOfStay < (startingDay + numDays); dayOfStay++) {
+      let bookedDate = {
+        date: days[dayOfStay],
+        listing_id
       }
+      bookedDates.push(bookedDate);
+      curDay++;
     }
-
-    await knex.batchInsert('bookings.bookeddates', bookedDatesBatch, 10000);
-    console.log(`bookedDates for ${i * 10000 + 10000} listings inserted`);
+    curDay += randomNumberUpTo(10);
   }
+  return bookedDates;
 }
-
-seedBookedDates();
