@@ -9,6 +9,7 @@ jest.setTimeout(60000);
 let testIterations = 1000;
 
 describe('PostgresQL Query Speeds', () => {
+  
   test('fetching listing and bookeddates takes <= 50ms', async () => {
 
     let totalFetchListingTimeElapsed = 0;
