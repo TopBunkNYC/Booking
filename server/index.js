@@ -29,15 +29,15 @@ app.post('/bookinglisting', (req, res)=>{
 })
 
 app.put('/bookinglisting', (req, res)=>{ 
-	database.updateListing(1, req.body)
-		.then((dataObj)=>{ console.log('success'); console.log(dataObj); res.status(200).send(dataObj)})
-		.catch((err)=>{ console.log('failure'); res.send(err)})
+	models.updateListing(req.query.id, req.body)
+		.then((listing) => res.send(listing))
+		.catch((err) => res.status(400).send(err));	
 })
 
 app.delete('/bookinglisting', (req, res)=>{ 
-	database.deleteListing(1)
-		.then((dataObj)=>{ console.log('success'); console.log(dataObj); res.status(200).send(dataObj)})
-		.catch((err)=>{ console.log('failure'); res.send(err)})
+	models.deleteListing(req.query.id)
+		.then((listing) => res.send(listing))
+		.catch((err) => res.status(400).send(err));	
 })
 
 // app.use('/bundle.js', express.static(path.join(__dirname + '/../client/dist')));
