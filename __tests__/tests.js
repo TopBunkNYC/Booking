@@ -8,10 +8,10 @@ let id = randomNumberUpTo(10000000);
 
 jest.setTimeout(60000);
 
-let testIterations = 1;
+let testIterations = 1000;
 
 describe('PostgresQL Query Speeds', () => {
-  test('fetching listing and bookeddates takes <= 50ms', async () => {
+  // test('fetching listing and bookeddates takes <= 50ms', async () => {
 
   //   let totalTimeElapsed = 0;
   //   for (let i = 0; i < testIterations; i++) {
@@ -29,25 +29,45 @@ describe('PostgresQL Query Speeds', () => {
   // });
   
   test('writing listing takes <= 50ms', async () => {
-    let price = 50 + randomNumberUpTo(400);
-    let maxguests = 1 + randomNumberUpTo(6);
-    let minstay = 1 + randomNumberUpTo(2);
-    let stars = (1 + (Math.random() * 4)).toFixed(2);
-    let numratings = randomNumberUpTo(110);
-    let listing = {
-      price,
-      maxguests,
-      minstay,
-      stars,
-      numratings
+    let totalListingTimeElapsed = 0;
+    let totalBookedDatesTimeElapsed = 0;
+    for (let i = 0; i < testIterations; i++) {
+      let price = 50 + randomNumberUpTo(400);
+      let maxguests = 1 + randomNumberUpTo(6);
+      let minstay = 1 + randomNumberUpTo(2);
+      let stars = (1 + (Math.random() * 4)).toFixed(2);
+      let numratings = randomNumberUpTo(110);
+      let listing = {
+        price,
+        maxguests,
+        minstay,
+        stars,
+        numratings
+      }
+      let t1 = Date.now();
+      let insertId = await knex('bookings.listings').insert(listing).returning('id');
+      let timeElapsed1 = Date.now() - t1;
+      totalListingTimeElapsed += timeElapsed1;
+      
+      insertId = insertId[0];
+      await knex('bookings.listings').where('id', insertId).del();
+
+      let bookedDatesArr = await generatePostgresBookedDates(minstay, insertId);
+      let t2 = Date.now();
+      let result = await knex.batchInsert('bookings.bookeddates', bookedDatesArr, 10000);
+      let timeElapsed2 = Date.now() - t2;
+      totalBookedDatesTimeElapsed += timeElapsed2;
+
+      await knex('bookings.bookeddates').where('listing_id', insertId).delete();
     }
-    let t1 = Date.now();
-    let insertId = await knex('bookings.listings').insert(listing).returning('id');
-    let timeElapsed = Date.now() - t1;
-    expect(timeElapsed).toBeLessThanOrEqual(50);
-    console.log(`PostGres listing write speed: ${timeElapsed}`)
-    insertId = insertId[0];
-    await knex('bookings.listings').where('id', insertId).del();
+    let averageListingWriteSpeed = totalListingTimeElapsed / testIterations;
+    let averageBookedDatesWriteSpeed = totalBookedDatesTimeElapsed / testIterations;
+    let averageTotalWriteSpeed = averageBookedDatesWriteSpeed + averageListingWriteSpeed;
+    console.log(`Average Postgres write speed: 
+    Listing: ${averageListingWriteSpeed}
+    BookedDates: ${averageBookedDatesWriteSpeed}
+    Total: ${averageTotalWriteSpeed}`);
+    expect(averageTotalWriteSpeed).toBeLessThanOrEqual(50);
   });
 })
 
@@ -148,6 +168,60 @@ async function generateBookedDates(minStay) {
     // add stays of random lengths with random gaps in between until end of available booking period
     for (let dayOfStay = curDay; dayOfStay < (startingDay + numDays); dayOfStay++) {
       let bookedDate = days[dayOfStay];
+      bookedDates.push(bookedDate);
+      curDay++;
+    }
+    curDay += randomNumberUpTo(10);
+  }
+  return bookedDates;
+};
+
+async function generatePostgresBookedDates(minStay, listing_id) {
+
+  // create objects to map months to corresponding number of days in month and to year
+  let months = [11,12,1,2];
+  let daysInMonth = {
+    11: 30,
+    12: 31,
+    1: 31,
+    2: 28
+  }
+  let monthToYear = {
+    11: 2018,
+    12: 2018,
+    1: 2019,
+    2: 2019
+  }
+
+  // create array of all possible days for booking (all days Nov '18 through Feb '19)
+  let days = [];
+  for (let month of months) {
+    for (let day = 1; day < daysInMonth[month] + 1; day++) {
+      dayString = day.toString()
+      if (dayString.length === 1) {
+        dayString = '0' + dayString;
+      }
+      monthString = month.toString()
+      if (monthString.length === 1) {
+        monthString = '0' + monthString;
+      }
+      days.push(`${monthToYear[month]}-${monthString}-${dayString}`)
+    }
+  }
+
+  let bookedDates = [];
+  let curDay = 0;
+  curDay += randomNumberUpTo(10);
+  while (curDay < days.length - 1 - minStay) {
+    // ensure length of stay conforms to minStay rule for listing
+    let numDays = minStay + randomNumberUpTo(3);
+    let startingDay = curDay;
+    // add stays of random lengths with random gaps in between until end of available booking period
+    for (let dayOfStay = curDay; dayOfStay < (startingDay + numDays); dayOfStay++) {
+      let bookedDate = {
+        date: days[dayOfStay],
+        listing_id
+      }
       bookedDates.push(bookedDate);
       curDay++;
     }
