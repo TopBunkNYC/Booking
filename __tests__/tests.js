@@ -6,7 +6,7 @@ const randomNumberUpTo = (limit) => Math.floor(Math.random() * limit);
 
 jest.setTimeout(60000);
 
-let testIterations = 1;
+let testIterations = 1000;
 
 describe('PostgresQL Query Speeds', () => {
   test('fetching listing and bookeddates takes <= 50ms', async () => {
