@@ -4,7 +4,8 @@ const database = require('../database/index.js')
 const path = require('path')
 const port = 4000;
 const morgan = require('morgan');
-const cors = require('cors')
+const cors = require('cors');
+let models = require('./../database/models');
 
 var app = express();
 
@@ -16,15 +17,15 @@ app.use(express.static(path.join(__dirname + '/../client/dist')));
 
 app.get('/bookinglisting', (req, res)=>{ 
 	id = req.query.id;
-	database.getListing(id)
-		.then((dataObj)=>{ res.status(200).send(dataObj)})
-		.catch((err)=>{res.send(err)})
+	models.getListing(id)
+		.then((listing) => res.send(listing))
+		.catch((err) => res.send(err))
 })
 
 app.post('/bookinglisting', (req, res)=>{ 
-	database.createListing(req.body)
-		.then((dataObj)=>{ res.status(200).send(dataObj)})
-		.catch((err)=>{ res.send(err)})
+	models.postListing(req.body)
+		.then((listing) => res.send(listing))
+		.catch((err) => res.status(400).send(err));
 })
 
 app.put('/bookinglisting', (req, res)=>{ 

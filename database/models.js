@@ -1,11 +1,16 @@
-let knex = require('./index.js');
+let { db, Listing } = require('./../database/mongo.js');
 
-const getListing = (id) => {
-
+const getListing = async (id) => {
+	let listing = await Listing.findOne({'_id': id})
+	return listing;
 };
 
-const postListing = (id) => {
-
+const postListing = async (listingProps) => {
+	console.log(listingProps);
+	let newListing = new Listing(listingProps);
+	let savedListing = await newListing.save();
+	console.log(savedListing);
+	return savedListing;
 };
 
 const getBookedDatesForListing = (listingId) => {
