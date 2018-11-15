@@ -1,24 +1,25 @@
-let knex = require('./index.js');
+let { db, Listing } = require("./../database/mongo.js");
 
-const getListing = (id) => {
-
+const getListing = async id => {
+  return await Listing.findOne({ _id: id });
 };
 
-const postListing = (id) => {
-
+const postListing = async listingProps => {
+  let newListing = new Listing(listingProps);
+  return await newListing.save();
 };
 
-const getBookedDatesForListing = (listingId) => {
-
+const updateListing = async (id, listingProps) => {
+  return await Listing.findByIdAndUpdate(id, listingProps);
 };
 
-const postBookedDatesForListing = (listingId) => {
-
+const deleteListing = async id => {
+  return await Listing.findByIdAndDelete(id);
 };
 
 module.exports = {
-	getListing,
-	postListing,
-	getBookedDatesForListing,
-	postBookedDatesForListing
-}
+  getListing,
+  postListing,
+  updateListing,
+  deleteListing
+};
