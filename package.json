@@ -7,7 +7,7 @@
     "react-dev": "webpack -d --watch",
     "server-dev": "nodemon server/index.js",
     "init-db": "createdb topbunk && psql topbunk < database/init.sql",
-    "init-mongo-counter": "mongo < ./database/updateCounter.js",
+    "init-mongo-counter": "mongo < ./database/initAutoIncrement.js",
     "aws-connect": "ssh -i \"Louis-FEC-Booking.pem\" ubuntu@ec2-18-216-104-91.us-east-2.compute.amazonaws.com",
     "start-pm2": "pm2 start ./server/index.js",
     "list-pm2": "pm2 list",

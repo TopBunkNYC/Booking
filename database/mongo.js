@@ -13,8 +13,11 @@ var listingSchema = new mongoose.Schema({
   numRatings: Number,
   bookedDates: [String]
 }, { _id: false });
-listingSchema.plugin(AutoIncrement);
+listingSchema.plugin(AutoIncrement, { id: 'listings' });
 
 var Listing = mongoose.model('Listing', listingSchema);
 
-module.exports = Listing;
+module.exports = {
+  Listing,
+  db
+}
