@@ -1,10 +1,11 @@
-var knex = require('knex')({
-  client: 'pg',
-  version: '10.5',
+var knex = require("knex")({
+  client: "pg",
+  version: "10.5",
   connection: {
-    host : '127.0.0.1',
-    database : 'topbunk'
-  }
+    host: "127.0.0.1",
+    database: "topbunk"
+  },
+  pool: { min: 2, max: 10 }
 });
 
 module.exports = knex;
@@ -33,11 +34,11 @@ module.exports = knex;
 // 		database : 'booking'
 
 // 	}).then((conn)=>{
-			
+
 // 		let aptDates = conn.query(`
 // 		SELECT date, price, apartmentid, minStay, stars, numRatings, max
 // 		FROM apartment t1
-// 		INNER JOIN dates t2 
+// 		INNER JOIN dates t2
 // 		ON t1.id = t2.apartment_id
 // 		WHERE t1.apartmentid=${id};
 // 		`);
@@ -61,8 +62,8 @@ module.exports = knex;
 // 	}).then(()=>{
 // 		return aptData;
 // 	}).catch((err)=>{
-// 		console.log('query initialized err, works once componentsdidmount');		
-// 	})   
+// 		console.log('query initialized err, works once componentsdidmount');
+// 	})
 // }
 
 // var createListing = (data) => {
@@ -79,8 +80,8 @@ module.exports = knex;
 // 		conn.end();
 // 		return result;
 // 	}).catch((err)=>{
-// 		console.log(err);		
-// 	})   
+// 		console.log(err);
+// 	})
 // }
 
 // var updateListing = (id, data) => {
@@ -98,8 +99,8 @@ module.exports = knex;
 // 		conn.end();
 // 		return result;
 // 	}).catch((err)=>{
-// 		console.log(err);		
-// 	})  
+// 		console.log(err);
+// 	})
 // }
 
 // var deleteListing = (id) => {
@@ -116,8 +117,8 @@ module.exports = knex;
 // 		conn.end();
 // 		return result;
 // 	}).catch((err)=>{
-// 		console.log(err);		
-// 	})  
+// 		console.log(err);
+// 	})
 // }
 
 // module.exports = {
@@ -126,6 +127,3 @@ module.exports = knex;
 // 	updateListing,
 // 	deleteListing
 // }
-
-
-

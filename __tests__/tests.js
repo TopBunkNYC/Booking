@@ -6,13 +6,16 @@ const randomNumberUpTo = limit => Math.ceil(Math.random() * limit);
 
 jest.setTimeout(60000);
 
-let testIterations = 1000;
+let testIterations = 100;
 
 describe("PostgresQL Query Speeds", () => {
   test("fetching listing and bookeddates takes <= 50ms", async () => {
     let { db, Listing } = await require("./../database/mongo.js");
     let totalFetchListingTimeElapsed = 0;
     let totalFetchBookedDatesTimeElapsed = 0;
+
+    let totalSimultaneousFetchTimeElapsed = 0;
+    let totalSimultaneousRawFetchTimeElapsed = 0;
 
     let totalRawFetchListingTimeElapsed = 0;
     let totalRawFetchBookedDatesTimeElapsed = 0;
@@ -57,6 +60,33 @@ describe("PostgresQL Query Speeds", () => {
       );
       totalRawFetchBookedDatesTimeElapsed += Date.now() - t4;
 
+      // POSTGRES SIMULTANEOUS KNEX FETCH
+      let t7 = Date.now();
+      let listing7 = await Promise.all([
+        knex
+          .select()
+          .from("bookings.listings")
+          .where("id", id)
+          .limit(1),
+        knex
+          .select()
+          .from("bookings.bookeddates")
+          .where("listing_id", id)
+      ]);
+      // console.log(listing7[0]);
+      // console.log(listing7[1]);
+      totalSimultaneousFetchTimeElapsed += Date.now() - t7;
+
+      // POSTGRES SIMULTANEOUS RAW KNEX FETCH
+      let t8 = Date.now();
+      let listing9 = await Promise.all([
+        knex.raw(`SELECT * FROM bookings.listings WHERE id = ? LIMIT 1`, [id]),
+        knex.raw(`SELECT * FROM bookings.bookeddates WHERE listing_id = ?`, [
+          id
+        ])
+      ]);
+      totalSimultaneousRawFetchTimeElapsed += Date.now() - t8;
+
       // MONGO MONGOOSE LISTING FETCH
       let t5 = Date.now();
       let result = await Listing.findOne({ _id: id });
@@ -74,7 +104,7 @@ describe("PostgresQL Query Speeds", () => {
       totalFetchBookedDatesTimeElapsed / testIterations;
     let averageTotalFetchSpeed =
       averageListingFetchSpeed + averageBookedDatesFetchSpeed;
-    console.log(`Average Postgres fetch speed: 
+    console.log(`Average Postgres fetch speed:
       Listing: ${averageListingFetchSpeed}
       BookedDates: ${averageBookedDatesFetchSpeed}
       Total: ${averageTotalFetchSpeed}`);
@@ -85,10 +115,20 @@ describe("PostgresQL Query Speeds", () => {
       totalRawFetchBookedDatesTimeElapsed / testIterations;
     let averageTotalRawFetchSpeed =
       averageRawListingFetchSpeed + averageRawBookedDatesFetchSpeed;
-    console.log(`Average raw Postgres fetch speed: 
+    console.log(`Average raw Postgres fetch speed:
       Listing: ${averageRawListingFetchSpeed}
       BookedDates: ${averageRawBookedDatesFetchSpeed}
       Total: ${averageTotalRawFetchSpeed}`);
+
+    let averageSimultaneousFetchTimeElapsed =
+      totalSimultaneousFetchTimeElapsed / testIterations;
+    console.log(`Average simultaneous Postgres fetch speed: 
+      Total: ${averageSimultaneousFetchTimeElapsed}`);
+
+    let averageSimultaneousRawFetchTimeElapsed =
+      totalSimultaneousRawFetchTimeElapsed / testIterations;
+    console.log(`Average simultaneous raw Postgres fetch speed: 
+      Total: ${averageSimultaneousRawFetchTimeElapsed}`);
 
     let averageMongoListingFetchSpeed =
       totalMongoFetchListingTimeElapsed / testIterations;

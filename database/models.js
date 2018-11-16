@@ -1,7 +1,14 @@
-let { db, Listing } = require("./../database/mongo.js");
+let knex = require("./../database/index.js");
 
 const getListing = async id => {
-  return await Listing.findOne({ _id: id });
+  let listing = await knex.raw(
+    `SELECT * FROM bookings.listings WHERE id = ? LIMIT 1`,
+    [id]
+  );
+  listing = listing.rows[0]
+  // listing = listing[0]
+  // listing['bookedDates'] =
+  return ;
 };
 
 const postListing = async listingProps => {
