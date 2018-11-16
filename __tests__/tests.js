@@ -6,145 +6,172 @@ const randomNumberUpTo = limit => Math.ceil(Math.random() * limit);
 
 jest.setTimeout(60000);
 
-let testIterations = 100;
+let testIterations = 1000;
 
-describe("PostgresQL Query Speeds", () => {
-  test("fetching listing and bookeddates takes <= 50ms", async () => {
-    let { db, Listing } = await require("./../database/mongo.js");
-    let totalFetchListingTimeElapsed = 0;
-    let totalFetchBookedDatesTimeElapsed = 0;
+let idMax = 100000;
 
-    let totalSimultaneousFetchTimeElapsed = 0;
-    let totalSimultaneousRawFetchTimeElapsed = 0;
+// describe("Fetch Query Speeds", () => {
+// test("Sequential Postgres KNEX and Mongo Mongoose fetching takes <= 50ms", async () => {
+//   let { db, Listing } = await require("./../database/mongo.js");
+//   let totalFetchListingTimeElapsed = 0;
+//   let totalFetchBookedDatesTimeElapsed = 0;
+//   let totalMongoFetchTimeElapsed = 0;
 
-    let totalRawFetchListingTimeElapsed = 0;
-    let totalRawFetchBookedDatesTimeElapsed = 0;
+//   for (let i = 0; i < testIterations; i++) {
+//     let id = randomNumberUpTo(idMax);
 
-    let totalMongoFetchListingTimeElapsed = 0;
+//     // POSTGRES KNEX LISTING FETCH
+//     let t1 = Date.now();
+//     let listing1 = await knex
+//       .select()
+//       .from("bookings.listings")
+//       .where("id", id)
+//       .limit(1);
+//     totalFetchListingTimeElapsed += Date.now() - t1;
 
-    let totalRawMongoFetchListingTimeElapsed = 0;
+//     // POSTGRES KNEX BOOKEDDATES FETCH
+//     let t3 = Date.now();
+//     let bookeddates = await knex
+//       .select()
+//       .from("bookings.bookeddates")
+//       .where("listing_id", id);
+//     totalFetchBookedDatesTimeElapsed += Date.now() - t3;
 
-    for (let i = 0; i < testIterations; i++) {
-      let id = randomNumberUpTo(100000);
+//     // MONGO LISTING FETCH
+//     let t10 = Date.now();
+//     let result2 = await Listing.findOne({ _id: id });
+//     totalMongoFetchTimeElapsed += Date.now() - t10;
+//   }
 
-      // POSTGRES KNEX LISTING FETCH
-      let t1 = Date.now();
-      let listing1 = await knex
-        .select()
-        .from("bookings.listings")
-        .where("id", id)
-        .limit(1);
-      totalFetchListingTimeElapsed += Date.now() - t1;
+//   let averageListingFetchSpeed =
+//     totalFetchListingTimeElapsed / testIterations;
+//   let averageBookedDatesFetchSpeed =
+//     totalFetchBookedDatesTimeElapsed / testIterations;
+//   let averageTotalFetchSpeed =
+//     averageListingFetchSpeed + averageBookedDatesFetchSpeed;
+//   console.log(`Average Postgres KNEX fetch speed:
+//     Listing: ${averageListingFetchSpeed}
+//     BookedDates: ${averageBookedDatesFetchSpeed}
+//     Total: ${averageTotalFetchSpeed}`);
 
-      // POSTGRES RAW LISTING FETCH
-      let t2 = Date.now();
-      let listing2 = await knex.raw(
-        `SELECT * FROM bookings.listings WHERE id = ? LIMIT 1`,
-        [id]
-      );
-      totalRawFetchListingTimeElapsed += Date.now() - t2;
+//   let averageMongoFetchSpeed = totalMongoFetchTimeElapsed / testIterations;
+//   console.log(
+//     `Average Mongo Mongoose fetch speed: ${averageMongoFetchSpeed}`
+//   );
 
-      // POSTGRES KNEX BOOKEDDATES FETCH
-      let t3 = Date.now();
-      let bookeddates = await knex
-        .select()
-        .from("bookings.bookeddates")
-        .where("listing_id", id);
-      totalFetchBookedDatesTimeElapsed += Date.now() - t3;
+//   expect(averageListingFetchSpeed).toBeLessThanOrEqual(50);
+// });
 
-      // POSTGRES RAW BOOKEDDATES FETCH
-      let t4 = Date.now();
-      let bookeddates2 = await knex.raw(
-        `SELECT * FROM bookings.bookeddates WHERE listing_id = ?`,
-        [id]
-      );
-      totalRawFetchBookedDatesTimeElapsed += Date.now() - t4;
+// test("Sequential Postgres and Mongo raw fetching takes <= 50ms", async () => {
+//   let { db } = await require("./../database/mongo.js");
 
-      // POSTGRES SIMULTANEOUS KNEX FETCH
-      let t7 = Date.now();
-      let listing7 = await Promise.all([
-        knex
-          .select()
-          .from("bookings.listings")
-          .where("id", id)
-          .limit(1),
-        knex
-          .select()
-          .from("bookings.bookeddates")
-          .where("listing_id", id)
-      ]);
-      // console.log(listing7[0]);
-      // console.log(listing7[1]);
-      totalSimultaneousFetchTimeElapsed += Date.now() - t7;
+//   let totalRawFetchListingTimeElapsed = 0;
+//   let totalRawFetchBookedDatesTimeElapsed = 0;
 
-      // POSTGRES SIMULTANEOUS RAW KNEX FETCH
-      let t8 = Date.now();
-      let listing9 = await Promise.all([
-        knex.raw(`SELECT * FROM bookings.listings WHERE id = ? LIMIT 1`, [id]),
-        knex.raw(`SELECT * FROM bookings.bookeddates WHERE listing_id = ?`, [
-          id
-        ])
-      ]);
-      totalSimultaneousRawFetchTimeElapsed += Date.now() - t8;
+//   let totalRawMongoFetchListingTimeElapsed = 0;
 
-      // MONGO MONGOOSE LISTING FETCH
-      let t5 = Date.now();
-      let result = await Listing.findOne({ _id: id });
-      totalMongoFetchListingTimeElapsed += Date.now() - t5;
+//   for (let i = 0; i < testIterations; i++) {
+//     let id = randomNumberUpTo(idMax);
 
-      // MONGO RAW LISTING FETCH
-      let t6 = Date.now();
-      let result2 = await db.db.collection("listings").findOne({ _id: id });
-      totalRawMongoFetchListingTimeElapsed += Date.now() - t6;
-    }
+//     // POSTGRES RAW LISTING FETCH
+//     let t2 = Date.now();
+//     let listing2 = await knex.raw(
+//       `SELECT * FROM bookings.listings WHERE id = ? LIMIT 1`,
+//       [id]
+//     );
+//     totalRawFetchListingTimeElapsed += Date.now() - t2;
 
-    let averageListingFetchSpeed =
-      totalFetchListingTimeElapsed / testIterations;
-    let averageBookedDatesFetchSpeed =
-      totalFetchBookedDatesTimeElapsed / testIterations;
-    let averageTotalFetchSpeed =
-      averageListingFetchSpeed + averageBookedDatesFetchSpeed;
-    console.log(`Average Postgres fetch speed:
-      Listing: ${averageListingFetchSpeed}
-      BookedDates: ${averageBookedDatesFetchSpeed}
-      Total: ${averageTotalFetchSpeed}`);
+//     // POSTGRES RAW BOOKEDDATES FETCH
+//     let t4 = Date.now();
+//     let bookeddates2 = await knex.raw(
+//       `SELECT * FROM bookings.bookeddates WHERE listing_id = ?`,
+//       [id]
+//     );
+//     totalRawFetchBookedDatesTimeElapsed += Date.now() - t4;
 
-    let averageRawListingFetchSpeed =
-      totalRawFetchListingTimeElapsed / testIterations;
-    let averageRawBookedDatesFetchSpeed =
-      totalRawFetchBookedDatesTimeElapsed / testIterations;
-    let averageTotalRawFetchSpeed =
-      averageRawListingFetchSpeed + averageRawBookedDatesFetchSpeed;
-    console.log(`Average raw Postgres fetch speed:
-      Listing: ${averageRawListingFetchSpeed}
-      BookedDates: ${averageRawBookedDatesFetchSpeed}
-      Total: ${averageTotalRawFetchSpeed}`);
+//     // MONGO RAW LISTING FETCH
+//     let t6 = Date.now();
+//     let result2 = await db.db.collection("listings").findOne({ _id: id });
+//     totalRawMongoFetchListingTimeElapsed += Date.now() - t6;
+//   }
 
-    let averageSimultaneousFetchTimeElapsed =
-      totalSimultaneousFetchTimeElapsed / testIterations;
-    console.log(`Average simultaneous Postgres fetch speed: 
-      Total: ${averageSimultaneousFetchTimeElapsed}`);
+//   let averageRawListingFetchSpeed =
+//     totalRawFetchListingTimeElapsed / testIterations;
+//   let averageRawBookedDatesFetchSpeed =
+//     totalRawFetchBookedDatesTimeElapsed / testIterations;
+//   let averageTotalRawFetchSpeed =
+//     averageRawListingFetchSpeed + averageRawBookedDatesFetchSpeed;
+//   console.log(`Average raw SQL Postgres fetch speed:
+//     Listing: ${averageRawListingFetchSpeed}
+//     BookedDates: ${averageRawBookedDatesFetchSpeed}
+//     Total: ${averageTotalRawFetchSpeed}`);
 
-    let averageSimultaneousRawFetchTimeElapsed =
-      totalSimultaneousRawFetchTimeElapsed / testIterations;
-    console.log(`Average simultaneous raw Postgres fetch speed: 
-      Total: ${averageSimultaneousRawFetchTimeElapsed}`);
+//   let averageRawMongoListingFetchSpeed =
+//     totalRawMongoFetchListingTimeElapsed / testIterations;
+//   console.log(`Average MongoDB Native fetch speed:
+//   Listing: ${averageRawMongoListingFetchSpeed}`);
 
-    let averageMongoListingFetchSpeed =
-      totalMongoFetchListingTimeElapsed / testIterations;
-    console.log(`Average Mongo fetch speed: 
-      Total: ${averageMongoListingFetchSpeed}`);
+//   expect(averageTotalRawFetchSpeed).toBeLessThanOrEqual(50);
+//   expect(averageRawMongoListingFetchSpeed).toBeLessThanOrEqual(50);
+// });
 
-    let averageRawMongoListingFetchSpeed =
-      totalRawMongoFetchListingTimeElapsed / testIterations;
-    console.log(`Average MongoDB Native fetch speed: 
-    Listing: ${averageRawMongoListingFetchSpeed}`);
+// test("Simultaneous Postgres KNEX fetching takes <= 50ms", async () => {
+//   let totalSimultaneousFetchTimeElapsed = 0;
 
-    expect(averageTotalRawFetchSpeed).toBeLessThanOrEqual(50);
-    expect(averageRawMongoListingFetchSpeed).toBeLessThanOrEqual(50);
-  });
+//   for (let i = 0; i < testIterations; i++) {
+//     let id = randomNumberUpTo(idMax);
 
-  test("writing listing takes <= 50ms", async () => {
+//     // POSTGRES SIMULTANEOUS KNEX FETCH
+//     let t7 = Date.now();
+//     let listing7 = await Promise.all([
+//       knex
+//         .select()
+//         .from("bookings.listings")
+//         .where("id", id)
+//         .limit(1),
+//       knex
+//         .select()
+//         .from("bookings.bookeddates")
+//         .where("listing_id", id)
+//     ]);
+//     totalSimultaneousFetchTimeElapsed += Date.now() - t7;
+//   }
+
+//   let averageSimultaneousFetchTimeElapsed =
+//     totalSimultaneousFetchTimeElapsed / testIterations;
+//   console.log(`Average simultaneous Postgres fetch speed:
+//     Total: ${averageSimultaneousFetchTimeElapsed}`);
+
+//   expect(averageSimultaneousFetchTimeElapsed).toBeLessThanOrEqual(50);
+// });
+
+// test("Simultaneous raw SQL Postgres fetching takes <= 50ms", async () => {
+//   let totalSimultaneousRawFetchTimeElapsed = 0;
+
+//   for (let i = 0; i < testIterations; i++) {
+//     let id = randomNumberUpTo(idMax);
+
+//     // POSTGRES SIMULTANEOUS RAW KNEX FETCH
+//     let t8 = Date.now();
+//     let listing9 = await Promise.all([
+//       knex.raw(`SELECT * FROM bookings.listings WHERE id = ? LIMIT 1`, [id]),
+//       knex.raw(`SELECT * FROM bookings.bookeddates WHERE listing_id = ?`, [
+//         id
+//       ])
+//     ]);
+//     totalSimultaneousRawFetchTimeElapsed += Date.now() - t8;
+//   }
+
+//   let averageSimultaneousRawFetchTimeElapsed =
+//     totalSimultaneousRawFetchTimeElapsed / testIterations;
+//   console.log(`Average simultaneous raw SQL Postgres fetch speed:
+//     Total: ${averageSimultaneousRawFetchTimeElapsed}`);
+
+//   expect(averageSimultaneousRawFetchTimeElapsed).toBeLessThanOrEqual(50);
+// });
+
+describe("Write Query Speeds", () => {
+  test("Postgres write takes <= 50ms", async () => {
     let totalListingTimeElapsed = 0;
     let totalBookedDatesTimeElapsed = 0;
 
@@ -190,62 +217,46 @@ describe("PostgresQL Query Speeds", () => {
       totalBookedDatesTimeElapsed / testIterations;
     let averageTotalWriteSpeed =
       averageBookedDatesWriteSpeed + averageListingWriteSpeed;
-    console.log(`Average Postgres write speed: 
-      Listing: ${averageListingWriteSpeed}
-      BookedDates: ${averageBookedDatesWriteSpeed}
-      Total: ${averageTotalWriteSpeed}`);
+    console.log(`Average Postgres write speed:
+        Listing: ${averageListingWriteSpeed}
+        BookedDates: ${averageBookedDatesWriteSpeed}
+        Total: ${averageTotalWriteSpeed}`);
 
+    knex.destroy();
     expect(averageTotalWriteSpeed).toBeLessThanOrEqual(50);
   });
 
-  // describe("Mongo Query Speeds", () => {
-  //   test("fetching listing takes <= 50ms", async () => {
-  //     let totalTimeElapsed = 0;
+  test("Mongo Mongoose write takes <= 50ms", async () => {
+    let totalTimeElapsed = 0;
+    let { db, Listing } = await require("./../database/mongo.js");
 
-  //     for (let i = 0; i < testIterations; i++) {
-  //       let _id = randomNumberUpTo(10000000);
-  //       let t1 = Date.now();
-  //       let result = await Listing.findOne({ _id: _id });
-  //       let timeElapsed = Date.now() - t1;
-  //       totalTimeElapsed += timeElapsed;
-  //     }
+    for (let i = 0; i < testIterations; i++) {
+      let price = 50 + randomNumberUpTo(400);
+      let maxGuests = 1 + randomNumberUpTo(6);
+      let minStay = 1 + randomNumberUpTo(2);
+      let stars = Number((1 + Math.random() * 4).toFixed(2));
+      let numRatings = randomNumberUpTo(110);
+      let bookedDates = generateBookedDates(minStay);
+      let listingProps = {
+        price,
+        maxGuests,
+        minStay,
+        stars,
+        numRatings,
+        bookedDates
+      };
+      let newListing = new Listing(listingProps);
+      let t1 = Date.now();
+      let savedListing = await newListing.save();
+      let timeElapsed = Date.now() - t1;
+      totalTimeElapsed += timeElapsed;
+      await Listing.deleteOne({ _id: savedListing._id });
+    }
 
-  //     let averageFetchSpeed = totalTimeElapsed / testIterations;
-  //     console.log(`Average Mongo listing fetch speed: ${averageFetchSpeed}`);
+    let averageWriteSpeed = totalTimeElapsed / testIterations;
+    console.log(`Average Mongo Mongoose write speed: ${averageWriteSpeed}`);
 
-  //     expect(averageFetchSpeed).toBeLessThanOrEqual(50);
-  //   });
-
-  //   test("writing listing takes <= 50ms", async () => {
-  //     let totalTimeElapsed = 0;
-
-  //     for (let i = 0; i < testIterations; i++) {
-  //       let price = 50 + randomNumberUpTo(400);
-  //       let maxGuests = 1 + randomNumberUpTo(6);
-  //       let minStay = 1 + randomNumberUpTo(2);
-  //       let stars = Number((1 + Math.random() * 4).toFixed(2));
-  //       let numRatings = randomNumberUpTo(110);
-  //       let bookedDates = generateBookedDates(minStay);
-  //       let listingProps = {
-  //         price,
-  //         maxGuests,
-  //         minStay,
-  //         stars,
-  //         numRatings,
-  //         bookedDates
-  //       };
-  //       let newListing = new Listing(listingProps);
-  //       let t1 = Date.now();
-  //       let savedListing = await newListing.save();
-  //       let timeElapsed = Date.now() - t1;
-  //       totalTimeElapsed += timeElapsed;
-  //       await Listing.deleteOne({ _id: savedListing._id });
-  //     }
-
-  //     let averageWriteSpeed = totalTimeElapsed / testIterations;
-  //     console.log(`Average Mongo listing write speed: ${averageWriteSpeed}`);
-
-  //     db.close();
-  //     expect(averageWriteSpeed).toBeLessThanOrEqual(50);
-  //   });
+    db.close();
+    expect(averageWriteSpeed).toBeLessThanOrEqual(50);
+  });
 });

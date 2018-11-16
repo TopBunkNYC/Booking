@@ -1,27 +1,51 @@
 let knex = require("./../database/index.js");
 
 const getListing = async id => {
-  let listing = await knex.raw(
-    `SELECT * FROM bookings.listings WHERE id = ? LIMIT 1`,
-    [id]
-  );
-  listing = listing.rows[0]
-  // listing = listing[0]
-  // listing['bookedDates'] =
-  return ;
+  let result = await Promise.all([
+    knex.raw(`SELECT * FROM bookings.listings WHERE id = ? LIMIT 1`, [id]),
+    knex.raw(`SELECT * FROM bookings.bookeddates WHERE listing_id = ?`, [id])
+  ]);
+  listing = result[0].rows[0];
+  listing.dates = result[1].rows.map(row => row.date);
+  return listing;
 };
 
 const postListing = async listingProps => {
-  let newListing = new Listing(listingProps);
-  return await newListing.save();
+  try {
+    let insertId = await knex("bookings.listings")
+      .insert(listingProps)
+      .returning("id");
+    return insertId;
+  } catch (err) {
+    console.log(err);
+  }
+
+  // .returning("id");
+  // let newListing = new Listing(listingProps);
+  // return await newListing.save();
 };
 
 const updateListing = async (id, listingProps) => {
-  return await Listing.findByIdAndUpdate(id, listingProps);
+  try {
+    let result = await knex("bookings.listings")
+      .where("id", id)
+      .update(listingProps);
+    return String(result);
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 const deleteListing = async id => {
-  return await Listing.findByIdAndDelete(id);
+  try {
+    return String(
+      await knex("bookings.listings")
+        .where("id", id)
+        .del()
+    );
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 module.exports = {
