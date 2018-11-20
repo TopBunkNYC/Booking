@@ -1,3 +1,5 @@
+require("newrelic");
+
 const express = require("express");
 const bodyParser = require("body-parser");
 const database = require("../database/index.js");
@@ -9,7 +11,7 @@ let models = require("./../database/models");
 
 var app = express();
 
-app.use(morgan("dev"));
+// app.use(morgan("dev"));
 app.use(bodyParser.json());
 app.use(cors());
 

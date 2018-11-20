@@ -7,6 +7,7 @@ const getListing = async id => {
   ]);
   listing = result[0].rows[0];
   listing.dates = result[1].rows.map(row => row.date);
+  listing.stars = Number(listing.stars);
   return listing;
 };
 

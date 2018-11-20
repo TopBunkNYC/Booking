@@ -9,6 +9,7 @@
     "init-db": "createdb topbunk && psql topbunk < database/init.sql",
     "init-mongo-counter": "mongo < ./database/initAutoIncrement.js",
     "aws-connect": "ssh -i \"Louis-FEC-Booking.pem\" ubuntu@ec2-18-216-104-91.us-east-2.compute.amazonaws.com",
+    "stress-test": "httperf --server localhost --port 4000 --uri /bookinglistings/?id=2948279 --num-conns 1000 --rate 100 --timeout 1",
     "start-pm2": "pm2 start ./server/index.js",
     "list-pm2": "pm2 list",
     "pm2-server": "pm2 show server",
@@ -26,6 +27,7 @@
   },
   "homepage": "https://github.com/Staybnb/Booking#readme",
   "dependencies": {
+    "artillery": "^1.6.0-25",
     "axios": "^0.18.0",
     "bluebird": "^3.5.2",
     "body-parser": "^1.18.3",
@@ -38,6 +40,7 @@
     "mongoose-sequence": "^4.0.1",
     "morgan": "^1.9.0",
     "mysql": "^2.16.0",
+    "newrelic": "^4.11.0",
     "nodemon": "^1.18.4",
     "pg": "^7.6.1",
     "pm2": "^3.2.2",
