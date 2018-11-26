@@ -54,12 +54,11 @@ class Booking extends React.Component {
   }
 
   componentDidMount() {
-    let queryString = window.location;
-    let listingId = queryString.search.slice(-7) * 1;
-    console.log("client current id", listingId);
+    const urlParams = new URLSearchParams(window.location.search);
+    const listingId = urlParams.get("id");
     if (listingId) {
       axios
-        .get("/bookinglisting", {
+        .get("http://localhost:9005/bookinglisting", {
           params: { id: listingId }
         })
         .then(({ data }) => {

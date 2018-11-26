@@ -1,0 +1,1 @@
+ALTER SEQUENCE bookings.listings_id_seq RESTART WITH 10000001
