@@ -169,3 +169,5 @@ class Booking extends React.Component {
 }
 
 ReactDOM.render(<Booking />, document.getElementById("booking"));
+
+export default Booking;

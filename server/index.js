@@ -4,10 +4,13 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const database = require("../database/index.js");
 const path = require("path");
-const port = 9005;
+const port = 9006;
 const morgan = require("morgan");
 const cors = require("cors");
 let models = require("./../database/models");
+const Booking = require("./../client/dist/bundle-server").default;
+const React = require("react");
+const ReactDOMServer = require("react-dom/server");
 
 var app = express();
 
@@ -46,7 +49,36 @@ app.delete("/bookinglisting", (req, res) => {
     .catch(err => res.status(400).send(err));
 });
 
-// app.use('/bundle.js', express.static(path.join(__dirname + '/../client/dist')));
+const ssr = async id => {
+  let props = await models.getListing(id);
+  let component = React.createElement(Booking, props);
+  let ssr_html = ReactDOMServer.renderToString(component);
+  console.log(`ssr_html: ${ssr_html}
+  props: ${props}`);
+  return { ssr_html, props };
+};
+
+app.get("/listings", async (req, res) => {
+  // remember to stringify props before sending to client
+  let { ssr_html, props } = await ssr(req.query.id);
+  res.send(`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>Booking</title>
+      </head>
+      <body>
+        <div id="booking">${ssr_html}</div>
+        <link type="text/css" rel="stylesheet" href="guestBar.css" />
+      </body>
+    </html>
+  `);
+
+  //   <script
+  //   type="text/javascript"
+  //   src="https://s3.amazonaws.com/topbunk/bundle.js"
+  // ></script>
+});
 
 app.get("/*", (req, res) => {
   res.sendFile(path.join(__dirname + "/../client/dist/index.html"));
