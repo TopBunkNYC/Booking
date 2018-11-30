@@ -3,7 +3,7 @@ var SRC_DIR = path.join(__dirname, "/client/src");
 var DIST_DIR = path.join(__dirname, "/client/dist");
 
 const client = {
-  entry: `${SRC_DIR}/index.jsx`,
+  entry: `${SRC_DIR}/client.jsx`,
   output: {
     filename: "bundle.js",
     path: DIST_DIR
@@ -18,10 +18,25 @@ const client = {
           presets: ["react", "es2015"]
         }
       },
+      // {
+      //   test: /\.css$/,
+      //   include: /node_modules/,
+      //   loaders: ["style-loader", "css-loader", "sass-loader"]
+      // },
       {
         test: /\.css$/,
         include: /node_modules/,
-        loaders: ["style-loader", "css-loader", "sass-loader"]
+        use: [
+          "isomorphic-style-loader",
+          {
+            loader: "css-loader",
+            options: {
+              importLoaders: 1
+            }
+          },
+          "postcss-loader",
+          "sass-loader"
+        ]
       },
       {
         test: /\.(png|jp(e*)g|svg)$/,
@@ -40,7 +55,7 @@ const client = {
 };
 
 const server = {
-  entry: `${SRC_DIR}/index.jsx`,
+  entry: `${SRC_DIR}/booking.jsx`,
   target: "node",
   output: {
     filename: "bundle-server.js",
@@ -57,10 +72,25 @@ const server = {
           presets: ["react", "es2015"]
         }
       },
+      // {
+      //   test: /\.css$/,
+      //   include: /node_modules/,
+      //   loaders: ["style-loader", "css-loader", "sass-loader"]
+      // },
       {
         test: /\.css$/,
         include: /node_modules/,
-        loaders: ["style-loader", "css-loader", "sass-loader"]
+        use: [
+          "isomorphic-style-loader",
+          {
+            loader: "css-loader",
+            options: {
+              importLoaders: 1
+            }
+          },
+          "postcss-loader",
+          "sass-loader"
+        ]
       },
       {
         test: /\.(png|jp(e*)g|svg)$/,

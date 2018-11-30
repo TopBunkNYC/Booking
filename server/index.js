@@ -54,11 +54,11 @@ const ssr = async id => {
   let component = React.createElement(Booking, props);
   let ssr_html = ReactDOMServer.renderToString(component);
   console.log(`ssr_html: ${ssr_html}
-  props: ${props}`);
+  props: ${JSON.stringify(props)}`);
   return { ssr_html, props };
 };
 
-app.get("/listings", async (req, res) => {
+app.get("/listing", async (req, res) => {
   // remember to stringify props before sending to client
   let { ssr_html, props } = await ssr(req.query.id);
   res.send(`
@@ -70,6 +70,8 @@ app.get("/listings", async (req, res) => {
       <body>
         <div id="booking">${ssr_html}</div>
         <link type="text/css" rel="stylesheet" href="guestBar.css" />
+        <link type="text/css" rel="stylesheet" href="_datepicker.css" />
+        <link type="text/css" rel="stylesheet" href="flexboxgrid2.css" />
       </body>
     </html>
   `);
