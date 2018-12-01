@@ -84,6 +84,10 @@ app.get("/listing", async (req, res) => {
   `);
 });
 
+app.get("/renderBooking", async (req, res) => {
+  res.send(await ssr(req.query.id));
+});
+
 // src="https://s3.amazonaws.com/topbunk/bundle.js">
 
 app.get("/*", (req, res) => {

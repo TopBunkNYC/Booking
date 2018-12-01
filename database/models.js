@@ -20,10 +20,6 @@ const postListing = async listingProps => {
   } catch (err) {
     console.log(err);
   }
-
-  // .returning("id");
-  // let newListing = new Listing(listingProps);
-  // return await newListing.save();
 };
 
 const updateListing = async (id, listingProps) => {
