@@ -24,6 +24,7 @@ class GuestsBar extends React.Component {
             />
           );
         })}
+        
         <InfItem person={"Infants"} />
         <Row>
           <Col xsOffset={1} xs={11}>

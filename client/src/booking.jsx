@@ -16,13 +16,13 @@ class Booking extends React.Component {
     this.state = {
       listToggle: "ToggleStart",
       arrowImg: "down",
-      guests: 0,
-      max: 0,
-      minStay: 0,
-      numRatings: 0,
+      guests: 1,
+      max: this.props.max || 0,
+      minStay: this.props.minStay || 0,
+      numRatings: this.props.numRatings || 0,
       price: this.props.price || 0,
-      stars: 0,
-      apartmentid: 0,
+      stars: this.props.stars || 0,
+      apartmentid: this.props.id || 0,
       startDate: null,
       endDate: null,
       dates: ["11/01/2018"],
@@ -53,29 +53,29 @@ class Booking extends React.Component {
     });
   }
 
-  componentDidMount() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const listingId = urlParams.get("id");
-    if (listingId) {
-      axios
-        .get("http://localhost:9005/bookinglisting", {
-          params: { id: listingId }
-        })
-        .then(({ data }) => {
-          this.setState(data);
-          var badDates = data.dates.map(date => {
-            return moment(date);
-          });
-          return badDates;
-        })
-        .catch(err => {
-          console.log(err);
-        })
-        .then(momentsArr => {
-          this.setState({ BAD_DATES: momentsArr });
-        });
-    }
-  }
+  // componentDidMount() {
+  //   const urlParams = new URLSearchParams(window.location.search);
+  //   const listingId = urlParams.get("id");
+  //   if (listingId) {
+  //     axios
+  //       .get("http://localhost:9005/bookinglisting", {
+  //         params: { id: listingId }
+  //       })
+  //       .then(({ data }) => {
+  //         this.setState(data);
+  //         var badDates = data.dates.map(date => {
+  //           return moment(date);
+  //         });
+  //         return badDates;
+  //       })
+  //       .catch(err => {
+  //         console.log(err);
+  //       })
+  //       .then(momentsArr => {
+  //         this.setState({ BAD_DATES: momentsArr });
+  //       });
+  //   }
+  // }
 
   render() {
     const isDayBlocked = day =>

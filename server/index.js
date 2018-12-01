@@ -53,34 +53,38 @@ const ssr = async id => {
   let props = await models.getListing(id);
   let component = React.createElement(Booking, props);
   let ssr_html = ReactDOMServer.renderToString(component);
-  console.log(`ssr_html: ${ssr_html}
-  props: ${JSON.stringify(props)}`);
   return { ssr_html, props };
 };
 
 app.get("/listing", async (req, res) => {
-  // remember to stringify props before sending to client
   let { ssr_html, props } = await ssr(req.query.id);
   res.send(`
     <!DOCTYPE html>
     <html>
       <head>
         <title>Booking</title>
-      </head>
-      <body>
-        <div id="booking">${ssr_html}</div>
         <link type="text/css" rel="stylesheet" href="guestBar.css" />
         <link type="text/css" rel="stylesheet" href="_datepicker.css" />
         <link type="text/css" rel="stylesheet" href="flexboxgrid2.css" />
+      </head>
+      <body>
+        <div id="booking">${ssr_html}</div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script type="text/javascript" src="bundle.js"></script>
+        <script>
+          ReactDOM.hydrate(
+            React.createElement(Booking, ${JSON.stringify(props)}),
+            document.getElementById('booking')
+          );
+        </script>
       </body>
     </html>
   `);
-
-  //   <script
-  //   type="text/javascript"
-  //   src="https://s3.amazonaws.com/topbunk/bundle.js"
-  // ></script>
 });
+
+// src="https://s3.amazonaws.com/topbunk/bundle.js">
 
 app.get("/*", (req, res) => {
   res.sendFile(path.join(__dirname + "/../client/dist/index.html"));
