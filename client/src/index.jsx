@@ -58,7 +58,7 @@ class Booking extends React.Component {
     const listingId = urlParams.get("id");
     if (listingId) {
       axios
-        .get("http://localhost:9005/bookinglisting", {
+        .get("/bookinglisting", {
           params: { id: listingId }
         })
         .then(({ data }) => {
@@ -168,4 +168,4 @@ class Booking extends React.Component {
   }
 }
 
-ReactDOM.render(<Booking />, document.getElementById("booking"));
+window.Booking = Booking;
