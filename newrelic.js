@@ -1,6 +1,7 @@
 "use strict";
 
-let { newRelicLicenseKey } = require("./env");
+let newRelicLicenseKey =
+  process.env.newRelic || require("./keys").newRelicLicenseKey;
 /**
  * New Relic agent configuration.
  *

@@ -4,7 +4,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const database = require("../database/index.js");
 const path = require("path");
-const port = 9006;
+const port = 9005;
 const morgan = require("morgan");
 const cors = require("cors");
 let models = require("./../database/models");
@@ -14,7 +14,7 @@ const ReactDOMServer = require("react-dom/server");
 
 var app = express();
 
-app.use(morgan("dev"));
+// app.use(morgan("dev"));
 app.use(bodyParser.json());
 app.use(cors());
 
@@ -56,7 +56,7 @@ const ssr = async id => {
   return { ssr_html, props };
 };
 
-app.get("/listing", async (req, res) => {
+app.get("/listings", async (req, res) => {
   let { ssr_html, props } = await ssr(req.query.id);
   res.send(`
     <!DOCTYPE html>
@@ -72,7 +72,7 @@ app.get("/listing", async (req, res) => {
 
         <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
         <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
-        <script type="text/javascript" src="bundle.js"></script>
+        <script type="text/javascript" src="https://s3.amazonaws.com/topbunk/bundle.js"></script>
         <script>
           ReactDOM.hydrate(
             React.createElement(Booking, ${JSON.stringify(props)}),
@@ -88,8 +88,6 @@ app.get("/renderBooking", async (req, res) => {
   res.send(await ssr(req.query.id));
 });
 
-// src="https://s3.amazonaws.com/topbunk/bundle.js">
-
 app.get("/*", (req, res) => {
   res.sendFile(path.join(__dirname + "/../client/dist/index.html"));
 });
@@ -97,5 +95,3 @@ app.get("/*", (req, res) => {
 app.listen(port, () => {
   console.log(`listening on port ${port}`);
 });
-
-// app.listen(process.env.PORT)
