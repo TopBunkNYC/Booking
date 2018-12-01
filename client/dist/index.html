@@ -2,13 +2,29 @@
 <html>
   <head>
     <title>Booking</title>
+    <link type="text/css" rel="stylesheet" href="_datepicker.css" />
+    <link type="text/css" rel="stylesheet" href="flexboxgrid2.css" />
+    <link type="text/css" rel="stylesheet" href="guestBar.css" />
   </head>
   <body>
     <div id="booking"></div>
     <script
+      crossorigin
+      src="https://unpkg.com/react@16.6.3/umd/react.development.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@16.6.3/umd/react-dom.development.js"
+    ></script>
+    <script
       type="text/javascript"
       src="https://s3.amazonaws.com/topbunk/bundle.js"
     ></script>
-    <link type="text/css" rel="stylesheet" href="guestBar.css" />
+    <script>
+      ReactDOM.render(
+        React.createElement(Booking),
+        document.getElementById("booking")
+      );
+    </script>
   </body>
 </html>
