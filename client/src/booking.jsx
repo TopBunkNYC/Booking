@@ -31,32 +31,32 @@ class Booking extends React.Component {
     this.toggleList = this.toggleList.bind(this);
   }
 
-  // componentDidMount() {
-  //   const urlParams = new URLSearchParams(window.location.search);
-  //   const listingId = urlParams.get("id");
-  //   if (listingId) {
-  //     axios
-  //       .get(
-  //         "http://ec2co-ecsel-14mqx2j7r6mip-726135605.us-east-2.elb.amazonaws.com:9005/bookinglisting",
-  //         {
-  //           params: { id: listingId }
-  //         }
-  //       )
-  //       .then(({ data }) => {
-  //         this.setState(data);
-  //         var badDates = data.dates.map(date => {
-  //           return moment(date);
-  //         });
-  //         return badDates;
-  //       })
-  //       .catch(err => {
-  //         console.log(err);
-  //       })
-  //       .then(momentsArr => {
-  //         this.setState({ BAD_DATES: momentsArr });
-  //       });
-  //   }
-  // }
+  componentDidMount() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const listingId = urlParams.get("id");
+    if (listingId) {
+      axios
+        .get(
+          "http://ec2co-ecsel-14mqx2j7r6mip-726135605.us-east-2.elb.amazonaws.com:9005/bookinglisting",
+          {
+            params: { id: listingId }
+          }
+        )
+        .then(({ data }) => {
+          this.setState(data);
+          var badDates = data.dates.map(date => {
+            return moment(date);
+          });
+          return badDates;
+        })
+        .catch(err => {
+          console.log(err);
+        })
+        .then(momentsArr => {
+          this.setState({ BAD_DATES: momentsArr });
+        });
+    }
+  }
 
   toggleList(event) {
     event.preventDefault();
