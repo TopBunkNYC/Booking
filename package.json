@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "react-dev": "webpack -d --watch",
+    "react-prod": "webpack -p",
     "server-dev": "nodemon server/index.js",
     "init-db": "createdb topbunk && psql topbunk < database/postgresInit.sql",
     "postinit-db": "node database/postgresSeed.js && psql topbunk < database/postgresAutoIncrementReset.sql",

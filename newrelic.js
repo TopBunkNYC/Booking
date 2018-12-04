@@ -2,6 +2,7 @@
 
 let newRelicLicenseKey =
   process.env.newRelic || require("./keys").newRelicLicenseKey;
+
 /**
  * New Relic agent configuration.
  *
@@ -12,7 +13,7 @@ exports.config = {
   /**
    * Array of application names.
    */
-  app_name: ["TopBunk Bookings"],
+  app_name: ["TopBunk Booking"],
   /**
    * Your New Relic license key.
    */
