@@ -2,7 +2,7 @@ let knex = require("./index.js");
 let generateBookedDates = require("./generateBookedDates");
 const randomNumberUpTo = limit => Math.floor(Math.random() * limit);
 
-// create listings and insert in batches of 10,000
+// create listings and insert in batches of 20,000
 (async () => {
   let t1 = Date.now();
   for (let i = 0; i < 20000; i++) {

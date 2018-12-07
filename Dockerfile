@@ -11,6 +11,5 @@ RUN npm install
 COPY . .
 
 EXPOSE 9005
-# CMD [ "npm", "run", "server-dev" ]
-# CMD [ "npm", "run", "start-pm2" ]
+
 CMD ["pm2-runtime", "server/index.js"]
