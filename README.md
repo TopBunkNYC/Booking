@@ -58,7 +58,8 @@ npm run server-dev
 Access a listing page by navigating to [http://localhost:9005/listings?id=#](http://localhost:9005/listings?id=#), where # represents the listing id and can be any integer from 1 to 10M. For example, listing 246 would be [http://localhost:9005/listings?id=246](http://localhost:9005/listings?id=246)
 
 If everything is working correctly, you should see something like the below (your data will almost certainly be different).
-![Booking service screenshot](/images/screenshot.png)
+
+<img src="https://github.com/TopBunkNYC/Booking/blob/csr2/images/screenshot.png" width="48">
 
 ## API
 
