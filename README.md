@@ -4,10 +4,10 @@ This service allows users to see a TopBunk listing's average rating and to selec
 
 ## Related Projects
 
+- [https://github.com/TopBunkNYC/Proxy_Wyatt](https://github.com/TopBunkNYC/Proxy_Wyatt)
 - [https://github.com/TopBunkNYC/Description](https://github.com/TopBunkNYC/Description)
 - [https://github.com/TopBunkNYC/Neighborhood](https://github.com/TopBunkNYC/Neighborhood)
 - [https://github.com/TopBunkNYC/Reviews](https://github.com/TopBunkNYC/Reviews)
-- [https://github.com/TopBunkNYC/Proxy_Wyatt](https://github.com/TopBunkNYC/Proxy_Wyatt)
 
 ## Getting Started
 
