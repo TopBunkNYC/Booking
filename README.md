@@ -2,6 +2,13 @@
 
 This service allows users to see a TopBunk listing's average rating and to select free dates for booking.
 
+## Related Projects
+
+- [https://github.com/TopBunkNYC/Description](https://github.com/TopBunkNYC/Description)
+- [https://github.com/TopBunkNYC/Neighborhood](https://github.com/TopBunkNYC/Neighborhood)
+- [https://github.com/TopBunkNYC/Reviews](https://github.com/TopBunkNYC/Reviews)
+- [https://github.com/TopBunkNYC/Proxy_Wyatt](https://github.com/TopBunkNYC/Proxy_Wyatt)
+
 ## Getting Started
 
 ### Downloading dependencies
@@ -48,7 +55,7 @@ Start the server on localhost
 npm run server-dev
 ```
 
-Access a listing page by navigating to [http://localhost:9005/listings?id=#](http://localhost:9005/listings?id=#), where # is any integer from 1 to 10M and represents the listing id. For example, listing 246 would be [http://localhost:9005/listings?id=246](http://localhost:9005/listings?id=246)
+Access a listing page by navigating to [http://localhost:9005/listings?id=#](http://localhost:9005/listings?id=#), where # represents the listing id and can be any integer from 1 to 10M. For example, listing 246 would be [http://localhost:9005/listings?id=246](http://localhost:9005/listings?id=246)
 
 ## API
 
