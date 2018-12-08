@@ -4,3 +4,4 @@ bundle.js
 Louis-FEC-Booking.pem
 *.pem
 keys.js
+*.log
