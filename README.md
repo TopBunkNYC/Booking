@@ -4,10 +4,10 @@ This service allows users to see a TopBunk listing's average rating and to selec
 
 ## Related Projects
 
+- [https://github.com/TopBunkNYC/Proxy_Wyatt](https://github.com/TopBunkNYC/Proxy_Wyatt)
 - [https://github.com/TopBunkNYC/Description](https://github.com/TopBunkNYC/Description)
 - [https://github.com/TopBunkNYC/Neighborhood](https://github.com/TopBunkNYC/Neighborhood)
 - [https://github.com/TopBunkNYC/Reviews](https://github.com/TopBunkNYC/Reviews)
-- [https://github.com/TopBunkNYC/Proxy_Wyatt](https://github.com/TopBunkNYC/Proxy_Wyatt)
 
 ## Getting Started
 
@@ -59,7 +59,7 @@ Access a listing page by navigating to [http://localhost:9005/listings?id=#](htt
 
 If everything is working correctly, you should see something like the below (your data will almost certainly be different).
 
-<img src="https://github.com/TopBunkNYC/Booking/blob/csr2/images/screenshot.png" width="48">
+<img src="https://github.com/TopBunkNYC/Booking/blob/csr2/images/screenshot.png" width="400">
 
 ## API
 
