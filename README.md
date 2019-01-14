@@ -1,6 +1,6 @@
 # Booking Service
 
-A service that allows users to see a hostel listing's average rating and to select free dates for booking within the TopBunk application, built using [PostgreSQL](https://www.postgresql.org/) [Knex](https://knexjs.org/), [React](https://reactjs.org/), [react-dates](https://github.com/airbnb/react-dates), and [Express](http://expressjs.com/).
+A service that allows users to see a hostel listing's average rating and to select free dates for booking within the TopBunk application. Built using [PostgreSQL](https://www.postgresql.org/) [Knex](https://knexjs.org/), [React](https://reactjs.org/), [react-dates](https://github.com/airbnb/react-dates), and [Express](http://expressjs.com/).
 
 ![Demo](https://imgur.com/ik2Gaqe.gif)
 
