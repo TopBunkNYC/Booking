@@ -1,6 +1,15 @@
 # Booking Service
 
-This service allows users to see a TopBunk listing's average rating and to select free dates for booking.
+This service allows users to see a hostel listing's average rating and to select free dates for booking.
+
+![Demo](https://imgur.com/ik2Gaqe.gif)
+
+#### [Deployment](http://18.188.2.254:9005/listings?id=5)
+Tip: Change the id parameter in the URL to any number from 1 through 10,000,000 to display data for different listings.
+
+The TopBunk Proxy Server integrates the booking, description, reviews, and about-the-neighborhood services into a unified application. You can find the proxy server's Github page [here](https://github.com/TopBunkNYC/Proxy_Wyatt).
+
+<img src="https://imgur.com/XqY7aWR.gif" >
 
 ## Related Projects
 
@@ -56,10 +65,6 @@ npm run server-dev
 ```
 
 Access a listing page by navigating to [http://localhost:9005/listings?id=#](http://localhost:9005/listings?id=#), where # represents the listing id and can be any integer from 1 to 10M. For example, listing 246 would be [http://localhost:9005/listings?id=246](http://localhost:9005/listings?id=246)
-
-If everything is working correctly, you should see something like the below (your data will almost certainly be different).
-
-<img src="https://github.com/TopBunkNYC/Booking/blob/csr2/images/screenshot.png" width="400">
 
 ## API
 
