@@ -52,7 +52,7 @@ npm run seed-db
 From within the root directory, run webpack to build the client bundle
 
 ```
-npm run react-prod
+npm run react-dev
 ```
 
 You can either rely on your server to serve the client bundle from your static folder, `client/dist`, or you can use a CDN.
