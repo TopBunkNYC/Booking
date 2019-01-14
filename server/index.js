@@ -1,52 +1,97 @@
-const express = require('express')
-const bodyParser = require('body-parser')
-const database = require('../database/index.js')
-const path = require('path')
-const port = 4000;
-const morgan = require('morgan');
-const cors = require('cors')
+// require("newrelic");
+
+const express = require("express");
+const bodyParser = require("body-parser");
+const database = require("../database/index.js");
+const path = require("path");
+const port = 9005;
+const morgan = require("morgan");
+const cors = require("cors");
+let models = require("./../database/models");
+const Booking = require("./../client/dist/bundle-server").default;
+const React = require("react");
+const ReactDOMServer = require("react-dom/server");
 
 var app = express();
 
-app.use(morgan('dev'))
+// app.use(morgan("dev"));
 app.use(bodyParser.json());
 app.use(cors());
 
-app.use(express.static(path.join(__dirname + '/../client/dist')));
+app.use(express.static(path.join(__dirname + "/../client/dist")));
 
-app.get('/bookinglisting', (req, res)=>{ 
-	id = req.query.id;
-	database.getListing(id)
-		.then((dataObj)=>{ res.status(200).send(dataObj)})
-		.catch((err)=>{res.send(err)})
-})
+app.get("/bookinglisting", (req, res) => {
+  id = req.query.id;
+  models
+    .getListing(id)
+    .then(listing => res.send(listing))
+    .catch(err => res.send(err));
+});
 
-app.post('/bookinglisting', (req, res)=>{ 
-	database.createListing(req.body)
-		.then((dataObj)=>{ res.status(200).send(dataObj)})
-		.catch((err)=>{ res.send(err)})
-})
+app.post("/bookinglisting", (req, res) => {
+  models
+    .postListing(req.body)
+    .then(listing => res.send(listing))
+    .catch(err => res.status(400).send(err));
+});
 
-app.put('/bookinglisting', (req, res)=>{ 
-	database.updateListing(1, req.body)
-		.then((dataObj)=>{ console.log('success'); console.log(dataObj); res.status(200).send(dataObj)})
-		.catch((err)=>{ console.log('failure'); res.send(err)})
-})
+app.put("/bookinglisting", (req, res) => {
+  models
+    .updateListing(req.query.id, req.body)
+    .then(listing => res.send(listing))
+    .catch(err => res.status(400).send(err));
+});
 
-app.delete('/bookinglisting', (req, res)=>{ 
-	database.deleteListing(1)
-		.then((dataObj)=>{ console.log('success'); console.log(dataObj); res.status(200).send(dataObj)})
-		.catch((err)=>{ console.log('failure'); res.send(err)})
-})
+app.delete("/bookinglisting", (req, res) => {
+  models
+    .deleteListing(req.query.id)
+    .then(listing => res.send(listing))
+    .catch(err => res.status(400).send(err));
+});
 
-// app.use('/bundle.js', express.static(path.join(__dirname + '/../client/dist')));
+const ssr = async id => {
+  let props = await models.getListing(id);
+  let component = React.createElement(Booking, props);
+  let ssr_html = ReactDOMServer.renderToString(component);
+  return { ssr_html, props };
+};
 
-app.get('/*', (req, res)=>{
-	res.sendFile(path.join(__dirname + '/../client/dist/index.html'))
-})
+app.get("/listings", async (req, res) => {
+  let { ssr_html, props } = await ssr(req.query.id);
+  res.send(`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>Booking</title>
+        <link type="text/css" rel="stylesheet" href="guestBar.css" />
+        <link type="text/css" rel="stylesheet" href="_datepicker.css" />
+        <link type="text/css" rel="stylesheet" href="flexboxgrid2.css" />
+      </head>
+      <body>
+        <div id="booking">${ssr_html}</div>
 
-app.listen(port, ()=>{
-    console.log(`listening on port ${port}`)
-})
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script type="text/javascript" src="https://s3.amazonaws.com/topbunk/bundle.js"></script>
+        <script>
+          ReactDOM.hydrate(
+            React.createElement(Booking, ${JSON.stringify(props)}),
+            document.getElementById('booking')
+          );
+        </script>
+      </body>
+    </html>
+  `);
+});
 
-// app.listen(process.env.PORT)
+app.get("/renderBooking", async (req, res) => {
+  res.send(await ssr(req.query.id));
+});
+
+app.get("/*", (req, res) => {
+  res.sendFile(path.join(__dirname + "/../client/dist/index.html"));
+});
+
+app.listen(port, () => {
+  console.log(`listening on port ${port}`);
+});

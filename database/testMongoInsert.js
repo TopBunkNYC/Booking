@@ -1,5 +1,6 @@
 let { Listing, db } = require("./mongo.js");
 const randomNumberUpTo = limit => Math.floor(Math.random() * limit);
+console.log(db);
 
 // let id = (batch * 100) + (listing + 1);
 let price = 50 + randomNumberUpTo(400);
