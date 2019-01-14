@@ -8,7 +8,7 @@ A service that allows users to see a hostel listing's average rating and to sele
 Tip: Change the id parameter in the URL to any number from 1 through 10,000,000 to display data for different listings.
 
 
-The [TopBunk Proxy Server](https://github.com/TopBunkNYC/Proxy_Wyatt) integrates the booking, description, reviews, and about-the-neighborhood services into a unified application.
+The [TopBunk Proxy Server](https://github.com/TopBunkNYC/Proxy_Wyatt) integrates this booking service along with the description, reviews, and about-the-neighborhood services into a unified application.
 
 <img src="https://imgur.com/XqY7aWR.gif" >
 
