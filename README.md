@@ -1,6 +1,6 @@
 # Booking Service
 
-This service allows users to see a hostel listing's average rating and to select free dates for booking.
+This service allows users to see a hostel listing's average rating and to select free dates for booking within the TopBunk application.
 
 ![Demo](https://imgur.com/ik2Gaqe.gif)
 
